@@ -108,7 +108,7 @@ export default function LabelCreator({ result }) {
         </p>
       </div>
       
-      <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
         <div 
           ref={labelRef} 
           style={{
@@ -199,21 +199,72 @@ export default function LabelCreator({ result }) {
               {result.labelMeaning}
             </p>
           )}
-        {/* Branding: Always present, takes space, but transparent to user. HTML2Canvas makes it opaque. */}
-        <div className="capture-only" style={{ 
-            textAlign: 'center',
-            paddingTop: '0.75rem',
-            borderTop: `1px solid ${theme.roman}30`,
-            marginTop: '2rem',
-            opacity: 0,
-            transition: 'opacity 0.2s ease',
-            color: theme.roman
-        }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2rem', opacity: 0.7 }}>
-                Koriname.com
-            </span>
+
+          {/* Branding: transparent to user, HTML2Canvas makes it opaque */}
+          <div className="capture-only" style={{ 
+              textAlign: 'center',
+              paddingTop: '0.75rem',
+              borderTop: `1px solid ${theme.roman}30`,
+              marginTop: '2rem',
+              opacity: 0,
+              transition: 'opacity 0.2s ease',
+              color: theme.roman
+          }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2rem', opacity: 0.7 }}>
+                  Koriname.com
+              </span>
+          </div>
+
+          {/* Mobile floating action buttons INSIDE the label */}
+          {!isDesktop && (
+            <div 
+              data-html2canvas-ignore="true"
+              className="label-mobile-actions"
+              style={{
+                position: 'absolute',
+                bottom: '1rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                gap: '0.75rem',
+                padding: '0.6rem 1.2rem',
+                borderRadius: '2rem',
+                background: 'rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                zIndex: 10,
+                animation: 'floatPill 3s ease-in-out infinite'
+              }}
+            >
+              <button 
+                onClick={handleShare} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.roman, padding: '0.4rem', display: 'flex', alignItems: 'center', opacity: 0.85, transition: 'opacity 0.2s, transform 0.2s' }}
+                title="Compartir"
+                className="label-pill-btn"
+              >
+                <Share2 size={20} />
+              </button>
+              <button 
+                onClick={handleDownload} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.roman, padding: '0.4rem', display: 'flex', alignItems: 'center', opacity: 0.85, transition: 'opacity 0.2s, transform 0.2s' }}
+                title="Guardar"
+                className="label-pill-btn"
+              >
+                <Download size={20} />
+              </button>
+              <button 
+                onClick={handleCopy} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: copying ? '#4ade80' : theme.roman, padding: '0.4rem', display: 'flex', alignItems: 'center', opacity: 0.85, transition: 'opacity 0.2s, transform 0.2s, color 0.3s' }}
+                title="Copiar"
+                className="label-pill-btn"
+              >
+                {copying ? <Check size={20} /> : <Copy size={20} />}
+              </button>
+            </div>
+          )}
         </div>
-      </div>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', marginBottom: '1.5rem' }}>
@@ -238,7 +289,8 @@ export default function LabelCreator({ result }) {
         ))}
       </div>
 
-      <div className="action-buttons-container grid-layout" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      {/* Desktop external buttons — hidden on mobile via CSS */}
+      <div className="action-buttons-container grid-layout label-desktop-actions" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <button className="btn btn-primary btn-order-download" onClick={handleDownload} style={{ width: '100%', justifyContent: 'center' }}>
           <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
         </button>
@@ -261,12 +313,6 @@ export default function LabelCreator({ result }) {
           <Printer size={18} /> <span style={{ fontSize: '0.9rem' }}>Imprimir</span>
         </button>
       </div>
-
-      {!isDesktop && (
-        <p className="body-sm text-center mt-4" style={{ opacity: 0.6 }}>
-          💡 Para resultados óptimos al copiar, usa navegadores modernos.
-        </p>
-      )}
     </div>
   );
 }

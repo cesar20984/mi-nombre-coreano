@@ -201,9 +201,24 @@ h1, h2, h3, h4, h5, h6 {
 .btn-order-copy { order: 3; }
 .btn-order-print { order: 4; }
 
+/* Hide label desktop buttons on mobile */
+.label-desktop-actions { display: none !important; }
+
+/* Mobile floating pill animation */
+@keyframes floatPill {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+.label-pill-btn:active {
+  opacity: 1 !important;
+  transform: scale(1.2);
+}
+
 /* Desktop overrides: Download, Copy, Print, Share */
 @media (min-width: 768px) {
   .btn-print { display: flex !important; }
+  .label-desktop-actions { display: grid !important; }
   .action-buttons-container.grid-layout {
     grid-template-columns: repeat(4, 1fr);
   }
