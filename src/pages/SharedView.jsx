@@ -77,9 +77,19 @@ function generateMeaning(name, day, month, year) {
 
 // ─── URL builder for share ───
 
+function normalizeSlug(str) {
+  return str
+    .normalize('NFD')                   // decompose accents: é → e + ́
+    .replace(/[\u0300-\u036f]/g, '')    // strip combining diacritical marks
+    .replace(/[''"`]/g, '')             // strip quotes/apostrophes
+    .replace(/\s+/g, '-')              // spaces → hyphens
+    .toLowerCase();
+}
+
 export function buildShareUrl(type, data) {
   // type: 'my-name' | 'saju' | 'meaning'
-  const base = `${window.location.origin}/${type}/${encodeURIComponent(data.name)}`;
+  const slug = normalizeSlug(data.name);
+  const base = `${window.location.origin}/${type}/${slug}`;
   const params = new URLSearchParams();
   if (data.day) params.set('d', data.day);
   if (data.month) params.set('m', data.month);
