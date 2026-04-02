@@ -170,7 +170,7 @@ export default function LabelCreator({ result }) {
             marginBottom: '1rem',
             position: 'relative',
             transition: 'color 0.5s ease'
-          }}>Mi Nombre en Coreano</p>
+          }}>Koriname.com</p>
           
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', position: 'relative' }}>
             <h2 className="korean-text" style={{ 

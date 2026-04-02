@@ -23,7 +23,7 @@ const phoneticMap = {
   'la': '라', 'le': '레', 'li': '리', 'lo': '로', 'lu': '루',
   'ma': '마', 'me': '메', 'mi': '미', 'mo': '모', 'mu': '무',
   'na': '나', 'ne': '네', 'ni': '니', 'no': '노', 'nu': '누',
-  'ma': '마', 'pe': '페', 'pi': '피', 'po': '포', 'pu': '푸',
+  'pa': '파', 'pe': '페', 'pi': '피', 'po': '포', 'pu': '푸',
   'ra': '라', 're': '레', 'ri': '리', 'ro': '로', 'ru': '루',
   'sa': '사', 'se': '세', 'si': '시', 'so': '소', 'su': '수',
   'ta': '타', 'te': '테', 'ti': '티', 'to': '토', 'tu': '투',
@@ -63,6 +63,7 @@ export default function TransliterationGenerator({ onGenerate }) {
       korean: korean || '이름',
       romanized: name,
       meaning: 'La transliteración fonética de tu nombre a caracteres Hangul.',
+      explanation: 'Para lograr este resultado leímos tu nombre sílaba a sílaba en español y encontramos los bloques del alfabeto coreano (Hangul) que generan el mismo sonido o uno idéntico. Así es exactamente como un nativo trataría de pronunciarlo y escribirlo basándose solo en cómo suena al escucharlo, dándole a tu nombre de nacimiento el perfecto look "Hallyu".'
     });
   };
 

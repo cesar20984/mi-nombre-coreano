@@ -42,11 +42,17 @@ export default function BirthdateGenerator({ onGenerate }) {
     const romanized = `${surnameStr.match(/\(([^)]+)\)/)[1]} ${monthStr.match(/\(([^)]+)\)/)[1]}${dayStr.match(/\(([^)]+)\)/)[1].toLowerCase()}`;
 
     const genderText = gender === 'F' ? 'femenino' : (gender === 'M' ? 'masculino' : 'unisex');
+    const genderExplanation = gender === 'F' ? 
+      'Tiene un toque femenino porque utiliza vocales y terminaciones suaves que, tradicionalmente en Corea, denotan delicadeza (como "Ah", "Yeon", o "Hee").' :
+      (gender === 'M' ? 
+      'Suena más masculino debido al uso de consonantes fuertes y terminaciones robustas que suelen transmitir fuerza y determinación (como "Jae", "Hyuk", o "Cheol").' : 
+      'Es un nombre unisex moderno, muy popular en la Corea contemporánea, balanceando sonidos suaves y neutrales (como "Ji", "Su", o "Jin").');
 
     onGenerate({
       korean: koreanName,
       romanized: romanized,
       meaning: `Combinación de estilo ${genderText} ensamblada a partir de tu fecha ${day}/${month}/${year}.`,
+      explanation: `Tu apellido "${surnameStr}" fue determinado por el último dígito de tu año de nacimiento. La sílaba intermedia "${monthStr}" proviene del mes seleccionado y la última "${dayStr}" corresponde directamente a tu día exacto. Además, ${genderExplanation}`
     });
   };
 

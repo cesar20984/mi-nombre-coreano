@@ -35,7 +35,7 @@ function Navbar() {
       <nav className="navbar glass">
         <div className="container nav-container">
           <Link to="/" className="nav-logo" onClick={closeMenu}>
-            <span className="korean-text">이름</span> Mi Nombre Coreano
+            <span className="korean-text">이름</span> Koriname
           </Link>
 
           <div className="nav-links">
@@ -83,7 +83,7 @@ function Footer() {
           Elaborado con amor para acercar la cultura y estética coreana al mundo hispanohablante.
         </p>
         <p className="body-sm mt-4" style={{ opacity: 0.5 }}>
-          © {new Date().getFullYear()} Mi Nombre Coreano. Sólo para uso de entretenimiento y estético.
+          © {new Date().getFullYear()} Koriname.com. Sólo para uso de entretenimiento y estético.
         </p>
       </div>
     </footer>

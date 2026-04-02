@@ -108,7 +108,7 @@ export default function GeneratorExplanation({ type }) {
       </div>
 
       <div className="mt-12 mb-8" style={{ paddingTop: '2.5rem', borderTop: '1px solid rgba(195, 200, 193, 0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h2 className="title-md mb-4" style={{ textAlign: 'center' }}>¿Qué es esto de "Mi Nombre en Coreano"?</h2>
+        <h2 className="title-md mb-4" style={{ textAlign: 'center' }}>¿Qué es Koriname.com?</h2>
         <p className="body-md" style={{ maxWidth: '800px', color: 'var(--on-surface-variant)', lineHeight: 1.8, textAlign: 'center' }}>
           Armamos este rinconcito web movidos por nuestro fanatismo por el k-pop, los maratones de k-dramas y la curiosidad por cómo suenan las cosas en Seúl. 
           Aquí tienes una colección cool de <strong>tres generadores automáticos</strong>, abecedarios para husmear las letras, ideas aesthetic para tatuajes o mascotas, y hasta un creador genial donde puedes descargar una tarjetita con tu nombre nuevo y escucharlo desde tu teléfono en tiempo real. 
