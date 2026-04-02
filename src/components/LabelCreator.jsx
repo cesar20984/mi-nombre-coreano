@@ -199,7 +199,21 @@ export default function LabelCreator({ result }) {
               {result.labelMeaning}
             </p>
           )}
+        {/* Branding: Always present, takes space, but transparent to user. HTML2Canvas makes it opaque. */}
+        <div className="capture-only" style={{ 
+            textAlign: 'center',
+            paddingTop: '0.75rem',
+            borderTop: `1px solid ${theme.roman}30`,
+            marginTop: '2rem',
+            opacity: 0,
+            transition: 'opacity 0.2s ease',
+            color: theme.roman
+        }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2rem', opacity: 0.7 }}>
+                Koriname.com
+            </span>
         </div>
+      </div>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', marginBottom: '1.5rem' }}>

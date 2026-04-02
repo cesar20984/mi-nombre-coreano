@@ -12,11 +12,11 @@ const generateCanvas = async (element, themeBg = '#ffffff') => {
     useCORS: true,
     logging: false,
     onclone: (clonedDoc) => {
-      // Find branding in the cloned document and make it visible
-      const branding = clonedDoc.querySelector('.capture-only');
-      if (branding) {
+      // Find all branding elements in the cloned document and make them visible
+      const brandings = clonedDoc.querySelectorAll('.capture-only');
+      brandings.forEach(branding => {
         branding.style.opacity = '1';
-      }
+      });
     }
   });
 };
