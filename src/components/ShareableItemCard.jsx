@@ -33,7 +33,7 @@ export default function ShareableItemCard({
     }}>
       {/* Visual part to be captured */}
       <div ref={cardRef} style={{ background: '#ffffff', borderRadius: '0.75rem', position: 'relative' }}>
-        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           {Icon && (
             <div style={{ 
               padding: '0.75rem', 
@@ -42,34 +42,38 @@ export default function ShareableItemCard({
               color: 'white',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              marginBottom: '1rem'
             }}>
               <Icon size={24} />
             </div>
           )}
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 className="title-md korean-text" style={{ margin: 0, fontSize: '2rem', color: 'var(--on-surface)' }}>{hangul}</h3>
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <h3 className="title-md korean-text" style={{ margin: 0, fontSize: '2.5rem', color: 'var(--on-surface)' }}>{hangul}</h3>
               <div data-html2canvas-ignore="true">
-                <SpeakButton text={hangul} size={20} />
+                <SpeakButton text={hangul} size={24} />
               </div>
             </div>
-            <p className="body-md" style={{ fontWeight: 800, color: 'var(--primary)', margin: '0.2rem 0', letterSpacing: '0.05em' }}>{roman}</p>
+            <p className="body-md" style={{ fontWeight: 800, color: 'var(--primary)', margin: '0.5rem 0', letterSpacing: '0.1em', fontSize: '1.2rem' }}>{roman}</p>
           </div>
         </div>
         
-        <p className="body-md" style={{ color: 'var(--on-surface-variant)', margin: '1rem 0 1.5rem 0', lineHeight: 1.5 }}>
+        <p className="body-md" style={{ color: 'var(--on-surface-variant)', margin: '1rem auto 1.5rem auto', lineHeight: 1.5, textAlign: 'center', maxWidth: '90%' }}>
           {desc}
         </p>
         
-        {/* Branding: Always present but absolute positioned and only visible by html2canvas (in effect) or very discrete */}
+        {/* Branding: Always present, takes space, but transparent to user. HTML2Canvas makes it opaque. */}
         <div className="capture-only" style={{ 
             textAlign: 'center',
-            paddingTop: '0.5rem',
-            borderTop: '1px solid #eee',
-            marginTop: '0.5rem'
+            paddingTop: '0.75rem',
+            borderTop: '1px solid #f0f0f0',
+            marginTop: '0.5rem',
+            opacity: 0,
+            transition: 'opacity 0.2s ease',
+            color: '#bbb'
         }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#ccc', textTransform: 'uppercase', letterSpacing: '0.2rem' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2rem' }}>
                 Koriname.com
             </span>
         </div>

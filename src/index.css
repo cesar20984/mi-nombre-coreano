@@ -176,24 +176,6 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
-.capture-only {
-  display: none;
-}
-
-/* We only show it in the Canvas capture context */
-[data-html2canvas-ignore="true"] ~ .capture-only,
-.card .capture-only {
-  display: block;
-}
-
-/* During normal web browse, we want it to be very discrete or invisible */
-/* But since html2canvas doesn't respect 'display: none', we use absolute position or similar */
-.capture-only {
-  display: block;
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-}
 
 
 

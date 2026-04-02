@@ -15,12 +15,7 @@ const generateCanvas = async (element, themeBg = '#ffffff') => {
       // Find branding in the cloned document and make it visible
       const branding = clonedDoc.querySelector('.capture-only');
       if (branding) {
-        branding.style.display = 'block';
         branding.style.opacity = '1';
-        branding.style.height = 'auto';
-        branding.style.paddingTop = '1rem';
-        branding.style.marginTop = '1rem';
-        branding.style.borderTop = '1px solid #eee';
       }
     }
   });
@@ -38,11 +33,14 @@ export const downloadAsImage = async (element, filename, bg) => {
 };
 
 export const copyAsImage = async (element, bg, setCopyStatus) => {
-  const canvas = await generateCanvas(element, bg);
-  if (!canvas) return;
-  
   setCopyStatus(true);
   try {
+    const canvas = await generateCanvas(element, bg);
+    if (!canvas) {
+      setCopyStatus(false);
+      return;
+    }
+
     canvas.toBlob(async (blob) => {
       if (!blob) {
         setCopyStatus(false);
@@ -53,11 +51,25 @@ export const copyAsImage = async (element, bg, setCopyStatus) => {
         await navigator.clipboard.write([item]);
         setTimeout(() => setCopyStatus(false), 2000);
       } catch (err) {
-        console.error("Copy failed:", err);
+        console.error("Copy failed, attempting share fallback via blob:", err);
+        // Fallback to share for mobile safari which rejects async clipboard writes
+        if (navigator.share) {
+            const file = new File([blob], 'koriname-share.png', { type: 'image/png' });
+            try {
+                await navigator.share({
+                title: 'Mi Nombre en Coreano',
+                files: [file]
+                });
+            } catch(e) {}
+        } else {
+            alert('Tu navegador no permite copiar imágenes directamente. Por favor, usa el botón de Compartir o Descargar.');
+        }
         setCopyStatus(false);
       }
     });
   } catch (e) {
+    console.error("Copy operation failed:", e);
+    alert('Tu navegador no permite copiar imágenes directamente. Prueba a usar el botón de Compartir o Descargar.');
     setCopyStatus(false);
   }
 };
@@ -74,7 +86,7 @@ export const shareAsImage = async (element, bg, title, text) => {
       try {
         await navigator.share({
           title: title,
-          text: text,
+          text: `${text} \n\nDescubre el tuyo en: ${window.location.origin}`,
           files: [file],
           url: window.location.origin
         });
