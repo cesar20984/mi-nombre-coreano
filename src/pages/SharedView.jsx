@@ -179,8 +179,8 @@ export default function SharedView() {
             </p>
           </div>
 
-          {/* Full LabelCreator — same as Home */}
-          <LabelCreator result={result} />
+          {/* Full LabelCreator — same as Home, with shared view mode */}
+          <LabelCreator result={result} isSharedView />
 
           {/* Explanation */}
           {result.explanation && (

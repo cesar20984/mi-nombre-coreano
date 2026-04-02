@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
 import { useRef, useState, useEffect } from 'react';
-import { Download, Copy, Share2, Printer, Check } from 'lucide-react';
+import { Download, Copy, Share2, Printer, Check, Sparkles } from 'lucide-react';
 import SpeakButton from './SpeakButton';
 import { downloadAsImage, copyAsImage, shareAsImage, printAsImage } from '../utils/shareUtils';
 import { buildShareUrl } from '../pages/SharedView';
@@ -74,7 +74,7 @@ const THEMES = [
   }
 ];
 
-export default function LabelCreator({ result }) {
+export default function LabelCreator({ result, isSharedView }) {
   const labelRef = useRef(null);
   const [activeThemeId, setActiveThemeId] = useState('kpop');
   const [copying, setCopying] = useState(false);
@@ -107,10 +107,18 @@ export default function LabelCreator({ result }) {
   return (
     <div className="fade-in animate-delay-200">
       <div className="text-center mb-6">
-        <h2 className="title-lg mb-1" style={{ color: 'var(--secondary)' }}>Este sería tu nombre en coreano</h2>
-        <p className="body-sm" style={{ opacity: 0.6, fontSize: '0.85rem' }}>
-          Copia o comparte tu nombre con esta etiqueta personalizada
-        </p>
+        <h2 className="title-lg mb-1" style={{ color: 'var(--secondary)' }}>
+          {isSharedView ? 'Este sería tu nombre en coreano, escucha su pronunciación' : 'Este sería tu nombre en coreano'}
+        </h2>
+        {isSharedView ? (
+          <a href="/" className="btn btn-primary" style={{ marginTop: '0.75rem', borderRadius: '2rem', fontSize: '0.9rem', padding: '0.6rem 1.5rem' }}>
+            <Sparkles size={16} /> Descubre otro nombre en coreano
+          </a>
+        ) : (
+          <p className="body-sm" style={{ opacity: 0.6, fontSize: '0.85rem' }}>
+            Copia o comparte tu nombre con esta etiqueta personalizada
+          </p>
+        )}
       </div>
       
       <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
