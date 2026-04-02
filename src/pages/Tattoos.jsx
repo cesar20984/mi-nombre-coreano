@@ -129,6 +129,7 @@ export default function Tattoos() {
                     desc={idea.desc}
                     shareTitle="Idea para Tatuaje Coreano"
                     shareText={`¡Esta palabra coreana sería un tatuaje increíble! ${idea.roman} (${idea.hangul}) - Significa: ${idea.desc}`}
+                    shareType="tatuaje"
                 />
               ))}
             </div>

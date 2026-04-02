@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Download, Copy, Share2, Printer, Check } from 'lucide-react';
 import SpeakButton from './SpeakButton';
 import { downloadAsImage, copyAsImage, shareAsImage, printAsImage } from '../utils/shareUtils';
+import { buildShareUrl } from '../pages/SharedView';
 
 const THEMES = [
   {
@@ -89,12 +90,21 @@ export default function LabelCreator({ result }) {
 
   const handleDownload = () => downloadAsImage(labelRef.current, `koriname-${result.romanized}`, theme.bg);
   const handleCopy = () => copyAsImage(labelRef.current, theme.bg, setCopying);
-  const handleShare = () => shareAsImage(
-    labelRef.current, 
-    theme.bg, 
-    'Mi Nombre en Coreano', 
-    `¡Mira mi nombre en coreano generado en Koriname.com! Soy ${result.romanized} (${result.korean})`
-  );
+  const handleShare = () => {
+    const shareUrl = buildShareUrl('nombre', {
+      korean: result.korean,
+      romanized: result.romanized,
+      labelMeaning: result.labelMeaning || '',
+      theme: { bg: theme.bg, gradient: theme.gradient, hangul: theme.hangul, roman: theme.roman, sub: theme.sub, wm: theme.wm, wmOpacity: theme.wmOpacity }
+    });
+    shareAsImage(
+      labelRef.current, 
+      theme.bg, 
+      'Mi Nombre en Coreano', 
+      `¡Mira mi nombre en coreano! Soy ${result.romanized} (${result.korean})`,
+      shareUrl
+    );
+  };
   const handlePrint = () => printAsImage(labelRef.current, theme.bg, 'Imprimir Tarjeta Koriname');
 
   if (!result) return null;

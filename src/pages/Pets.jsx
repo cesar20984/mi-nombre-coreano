@@ -156,6 +156,7 @@ export default function Pets() {
                     desc={pet.desc}
                     shareTitle="Nombre Coreano para Mascota"
                     shareText={`¡Mira este nombre coreano para mi mascota! ${pet.roman} (${pet.hangul}) - ${pet.desc}`}
+                    shareType="mascota"
                 />
               ))}
             </div>

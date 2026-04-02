@@ -49,6 +49,7 @@ export default function Dictionary() {
                 desc={item.meaning}
                 shareTitle="Diccionario de Nombres Coreanos"
                 shareText={`Acabo de encontrar este nombre coreano: ${item.roman} (${item.hangul}) - Significa: ${item.meaning}`}
+                shareType="diccionario"
             />
           ))}
         </div>

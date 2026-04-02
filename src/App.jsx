@@ -7,6 +7,7 @@ import Meanings from './pages/Meanings';
 import Dictionary from './pages/Dictionary';
 import Pets from './pages/Pets';
 import Tattoos from './pages/Tattoos';
+import SharedView from './pages/SharedView';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -103,6 +104,7 @@ function App() {
             <Route path="/diccionario" element={<Dictionary />} />
             <Route path="/mascotas" element={<Pets />} />
             <Route path="/tatuajes" element={<Tattoos />} />
+            <Route path="/compartir/:type/:data" element={<SharedView />} />
           </Routes>
         </main>
         <Footer />

@@ -72,7 +72,8 @@ export const copyAsImage = async (element, bg, setCopyStatus) => {
   }
 };
 
-export const shareAsImage = async (element, bg, title, text) => {
+export const shareAsImage = async (element, bg, title, text, shareUrl) => {
+  const url = shareUrl || window.location.origin;
   const canvas = await generateCanvas(element, bg);
   if (!canvas) return;
 
@@ -84,15 +85,15 @@ export const shareAsImage = async (element, bg, title, text) => {
       try {
         await navigator.share({
           title: title,
-          text: `${text} \n\nDescubre el tuyo en: ${window.location.origin}`,
+          text: `${text} \n\nDescubre el tuyo en: ${url}`,
           files: [file],
-          url: window.location.origin
+          url: url
         });
       } catch (err) {
         console.error("Share failed:", err);
       }
     } else {
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${text} - Descubre más en ${window.location.origin}`)}`;
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${text} - Descubre más en ${url}`)}`;
       window.open(whatsappUrl, '_blank');
     }
   });
