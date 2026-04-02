@@ -224,18 +224,12 @@ export default function LabelCreator({ result }) {
         ))}
       </div>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: isDesktop ? 'repeat(4, 1fr)' : 'repeat(2, 1fr)', 
-        gap: '0.75rem', 
-        maxWidth: '600px', 
-        margin: '0 auto' 
-      }}>
-        <button className="btn btn-primary" onClick={handleDownload} style={{ width: '100%', justifyContent: 'center' }}>
+      <div className="action-buttons-container grid-layout" style={{ maxWidth: '600px' }}>
+        <button className="btn btn-primary btn-order-download" onClick={handleDownload} style={{ width: '100%', justifyContent: 'center' }}>
           <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
         </button>
         
-        <button className="btn" onClick={handleCopy} style={{ 
+        <button className="btn btn-order-copy" onClick={handleCopy} style={{ 
           width: '100%', justifyContent: 'center', 
           backgroundColor: copying ? 'var(--success-container)' : 'var(--surface-container-high)',
           color: copying ? 'var(--on-success-container)' : 'var(--on-surface)',
@@ -245,15 +239,13 @@ export default function LabelCreator({ result }) {
           <span style={{ fontSize: '0.9rem' }}>{copying ? 'Copiado' : 'Copiar'}</span>
         </button>
 
-        <button className="btn" onClick={handleShare} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
+        <button className="btn btn-order-share" onClick={handleShare} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
           <Share2 size={18} /> <span style={{ fontSize: '0.9rem' }}>Compartir</span>
         </button>
 
-        {isDesktop && (
-          <button className="btn" onClick={handlePrint} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
-            <Printer size={18} /> <span style={{ fontSize: '0.9rem' }}>Imprimir</span>
-          </button>
-        )}
+        <button className="btn btn-print btn-order-print" onClick={handlePrint} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
+          <Printer size={18} /> <span style={{ fontSize: '0.9rem' }}>Imprimir</span>
+        </button>
       </div>
 
       {!isDesktop && (

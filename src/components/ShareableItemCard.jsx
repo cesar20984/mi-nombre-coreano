@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
-import { Download, Copy, Share2, Check } from 'lucide-react';
+import { Download, Copy, Share2, Check, Printer } from 'lucide-react';
 import SpeakButton from './SpeakButton';
-import { copyAsImage, shareAsImage, downloadAsImage } from '../utils/shareUtils';
+import { copyAsImage, shareAsImage, downloadAsImage, printAsImage } from '../utils/shareUtils';
 
 /**
  * Reusable card for list items (pets, tattoos, dictionary)
@@ -22,6 +22,7 @@ export default function ShareableItemCard({
   const handleDownload = () => downloadAsImage(cardRef.current, `koriname-${roman}`, '#ffffff');
   const handleCopy = () => copyAsImage(cardRef.current, '#ffffff', setCopying);
   const handleShare = () => shareAsImage(cardRef.current, '#ffffff', shareTitle, shareText);
+  const handlePrint = () => printAsImage(cardRef.current, '#ffffff', shareTitle);
 
   return (
     <div className="card hover-up" style={{ 
@@ -80,17 +81,13 @@ export default function ShareableItemCard({
       </div>
 
       {/* Action Buttons - Ignored in capture */}
-      <div data-html2canvas-ignore="true" style={{ 
-        marginTop: '0.5rem', 
-        display: 'flex', 
-        justifyContent: 'flex-end', 
-        gap: '0.5rem' 
-      }}>
-        <button onClick={handleDownload} className="btn-icon" title="Guardar imagen"><Download size={18} /></button>
-        <button onClick={handleCopy} className="btn-icon" title="Copiar" style={{ background: copying ? 'var(--success-container)' : '' }}>
+      <div data-html2canvas-ignore="true" className="action-buttons-container" style={{ marginTop: '0.5rem' }}>
+        <button onClick={handleDownload} className="btn-icon btn-order-download" title="Guardar imagen"><Download size={18} /></button>
+        <button onClick={handleCopy} className="btn-icon btn-order-copy" title="Copiar" style={{ background: copying ? 'var(--success-container)' : '' }}>
           {copying ? <Check size={18} /> : <Copy size={18} />}
         </button>
-        <button onClick={handleShare} className="btn-icon" title="Compartir"><Share2 size={18} /></button>
+        <button onClick={handleShare} className="btn-icon btn-order-share" title="Compartir"><Share2 size={18} /></button>
+        <button onClick={handlePrint} className="btn-icon btn-print btn-order-print" title="Imprimir"><Printer size={18} /></button>
       </div>
     </div>
   );

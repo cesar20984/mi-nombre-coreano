@@ -179,6 +179,39 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
+/* Action buttons ordering */
+.action-buttons-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.action-buttons-container.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Mobile: 3 buttons visible */
+  margin: 0 auto;
+  gap: 0.75rem;
+}
+
+/* Mobile defaults: Share, Download, Copy */
+.btn-print { display: none !important; }
+.btn-order-share { order: 1; }
+.btn-order-download { order: 2; }
+.btn-order-copy { order: 3; }
+.btn-order-print { order: 4; }
+
+/* Desktop overrides: Download, Copy, Print, Share */
+@media (min-width: 768px) {
+  .btn-print { display: flex !important; }
+  .action-buttons-container.grid-layout {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .btn-order-download { order: 1; }
+  .btn-order-copy { order: 2; }
+  .btn-order-print { order: 3; }
+  .btn-order-share { order: 4; }
+}
+
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr;
