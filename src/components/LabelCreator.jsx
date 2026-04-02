@@ -91,12 +91,7 @@ export default function LabelCreator({ result }) {
   const handleDownload = () => downloadAsImage(labelRef.current, `koriname-${result.romanized}`, theme.bg);
   const handleCopy = () => copyAsImage(labelRef.current, theme.bg, setCopying);
   const handleShare = () => {
-    const shareUrl = buildShareUrl('nombre', {
-      korean: result.korean,
-      romanized: result.romanized,
-      labelMeaning: result.labelMeaning || '',
-      theme: { bg: theme.bg, gradient: theme.gradient, hangul: theme.hangul, roman: theme.roman, sub: theme.sub, wm: theme.wm, wmOpacity: theme.wmOpacity }
-    });
+    const shareUrl = buildShareUrl('my-name', { name: result.romanized });
     shareAsImage(
       labelRef.current, 
       theme.bg, 

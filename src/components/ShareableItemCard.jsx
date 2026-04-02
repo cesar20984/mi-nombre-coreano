@@ -2,7 +2,12 @@ import { useState, useRef } from 'react';
 import { Download, Copy, Share2, Check, Printer } from 'lucide-react';
 import SpeakButton from './SpeakButton';
 import { copyAsImage, shareAsImage, downloadAsImage, printAsImage } from '../utils/shareUtils';
-import { buildShareUrl } from '../pages/SharedView';
+
+const SECTION_URLS = {
+  diccionario: '/diccionario',
+  mascota: '/mascotas',
+  tatuaje: '/tatuajes'
+};
 
 /**
  * Reusable card for list items (pets, tattoos, dictionary)
@@ -24,8 +29,8 @@ export default function ShareableItemCard({
   const handleDownload = () => downloadAsImage(cardRef.current, `koriname-${roman}`, '#ffffff');
   const handleCopy = () => copyAsImage(cardRef.current, '#ffffff', setCopying);
   const handleShare = () => {
-    const shareUrl = buildShareUrl(shareType || 'diccionario', { hangul, roman, desc });
-    shareAsImage(cardRef.current, '#ffffff', shareTitle, shareText, shareUrl);
+    const sectionUrl = `${window.location.origin}${SECTION_URLS[shareType] || '/diccionario'}`;
+    shareAsImage(cardRef.current, '#ffffff', shareTitle, shareText, sectionUrl);
   };
   const handlePrint = () => printAsImage(cardRef.current, '#ffffff', shareTitle);
 
