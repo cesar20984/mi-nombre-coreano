@@ -157,12 +157,33 @@ export default function SharedView() {
 
   const displayName = name.charAt(0).toUpperCase() + name.slice(1);
 
+  // Build proper SEO per type
+  const seoByType = {
+    'my-name': {
+      title: `${displayName} en Coreano se escribe ${result.korean}`,
+      description: `Descubre cómo se escribe y pronuncia ${displayName} en el alfabeto coreano (Hangul): ${result.korean}. Genera tu propio nombre coreano gratis en Koriname.com`,
+      keywords: `${displayName} en coreano, como se escribe ${displayName} en coreano, ${result.korean}, nombre coreano, hangul`
+    },
+    'saju': {
+      title: `${displayName} en Coreano: ${result.romanized} (${result.korean})`,
+      description: `El nombre coreano de ${displayName} según su fecha de nacimiento es ${result.romanized} (${result.korean}). ${result.meaning} Descubre el tuyo gratis en Koriname.com`,
+      keywords: `${displayName} nombre coreano por fecha, ${result.romanized}, ${result.korean}, saju nombre coreano, nombre coreano por nacimiento`
+    },
+    'meaning': {
+      title: `${displayName} en Coreano: ${result.romanized} (${result.korean})`,
+      description: `El nombre coreano de ${displayName} por significado es ${result.romanized} (${result.korean}). ${result.meaning} Genera tu nombre coreano gratis en Koriname.com`,
+      keywords: `${displayName} nombre coreano significado, ${result.romanized}, ${result.korean}, nombre coreano por tablas, significado nombre coreano`
+    }
+  };
+
+  const seo = seoByType[type] || seoByType['my-name'];
+
   return (
     <>
       <SEO 
-        title={`${displayName} en Coreano es ${result.romanized} (${result.korean}) | Koriname`}
-        description={`${displayName} en coreano se escribe ${result.korean} y se pronuncia ${result.romanized}. ${result.meaning} Descubre tu propio nombre coreano en Koriname.com`}
-        keywords={`${displayName} en coreano, ${result.korean}, ${result.romanized}, nombre coreano, koriname`}
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
       />
 
       <section className="section section-alt" style={{ paddingBottom: '4rem' }}>
