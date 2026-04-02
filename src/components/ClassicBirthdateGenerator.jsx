@@ -92,7 +92,10 @@ export default function ClassicBirthdateGenerator({ onGenerate }) {
       romanized: romanized,
       meaning: `Significado literal: ${meaningCapitalized}`,
       labelMeaning: meaningCapitalized,
-      explanation: `Tu apellido proviene directamente del último dígito de tu año (que da ${surnameObj.roman}), la parte media se tomó del número de tu mes (${monthObj.roman}) y la parte final de tu día exacto de nacimiento (${dayObj.roman}). Es un sistema lúdico clásico súper popular porque le adjudica a tus números elementos bellísimos de la naturaleza y aptitudes.`
+      explanation: `Tu apellido proviene directamente del último dígito de tu año (que da ${surnameObj.roman}), la parte media se tomó del número de tu mes (${monthObj.roman}) y la parte final de tu día exacto de nacimiento (${dayObj.roman}). Es un sistema lúdico clásico súper popular porque le adjudica a tus números elementos bellísimos de la naturaleza y aptitudes.`,
+      shareType: 'meaning',
+      inputName: romanized,
+      shareData: { day, month, year }
     });
   };
 

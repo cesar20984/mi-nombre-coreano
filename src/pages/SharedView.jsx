@@ -157,22 +157,22 @@ export default function SharedView() {
 
   const displayName = name.charAt(0).toUpperCase() + name.slice(1);
 
-  // Build proper SEO per type
+  // Build proper SEO per type — each must be truly unique
   const seoByType = {
     'my-name': {
-      title: `${displayName} en Coreano se escribe ${result.korean}`,
-      description: `Descubre cómo se escribe y pronuncia ${displayName} en el alfabeto coreano (Hangul): ${result.korean}. Genera tu propio nombre coreano gratis en Koriname.com`,
-      keywords: `${displayName} en coreano, como se escribe ${displayName} en coreano, ${result.korean}, nombre coreano, hangul`
+      title: `¿Cómo se escribe ${displayName} en Coreano? → ${result.korean}`,
+      description: `${displayName} en coreano se escribe ${result.korean}. Aprende cómo se pronuncia tu nombre en el alfabeto Hangul con audio incluido. Prueba gratis en Koriname.com`,
+      keywords: `${displayName} en coreano, como se escribe ${displayName} en coreano, ${result.korean}, transliteración coreano, nombre en hangul`
     },
     'saju': {
-      title: `${displayName} en Coreano: ${result.romanized} (${result.korean})`,
-      description: `El nombre coreano de ${displayName} según su fecha de nacimiento es ${result.romanized} (${result.korean}). ${result.meaning} Descubre el tuyo gratis en Koriname.com`,
-      keywords: `${displayName} nombre coreano por fecha, ${result.romanized}, ${result.korean}, saju nombre coreano, nombre coreano por nacimiento`
+      title: `Nombre Coreano de ${displayName} según su Fecha de Nacimiento`,
+      description: `Según el Saju (사주), el nombre coreano de ${displayName} es ${result.romanized} (${result.korean}). Descubre qué nombre coreano te asigna tu fecha de nacimiento en Koriname.com`,
+      keywords: `nombre coreano por fecha de nacimiento, saju ${displayName}, ${result.romanized}, ${result.korean}, nombre coreano por cumpleaños`
     },
     'meaning': {
-      title: `${displayName} en Coreano: ${result.romanized} (${result.korean})`,
-      description: `El nombre coreano de ${displayName} por significado es ${result.romanized} (${result.korean}). ${result.meaning} Genera tu nombre coreano gratis en Koriname.com`,
-      keywords: `${displayName} nombre coreano significado, ${result.romanized}, ${result.korean}, nombre coreano por tablas, significado nombre coreano`
+      title: `${result.romanized} (${result.korean}) — Significado del Nombre Coreano`,
+      description: `El nombre coreano ${result.romanized} (${result.korean}) significa: ${result.meaning}. Descubre el significado del tuyo con el método clásico de tablas en Koriname.com`,
+      keywords: `significado nombre coreano ${result.romanized}, que significa ${result.korean}, ${displayName} significado coreano, nombre coreano por significado`
     }
   };
 

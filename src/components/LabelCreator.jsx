@@ -91,7 +91,11 @@ export default function LabelCreator({ result, isSharedView }) {
   const handleDownload = () => downloadAsImage(labelRef.current, `koriname-${result.romanized}`, theme.bg);
   const handleCopy = () => copyAsImage(labelRef.current, theme.bg, setCopying);
   const handleShare = () => {
-    const shareUrl = buildShareUrl('my-name', { name: result.romanized });
+    const type = result.shareType || 'my-name';
+    const shareUrl = buildShareUrl(type, {
+      name: result.inputName || result.romanized,
+      ...(result.shareData || {})
+    });
     shareAsImage(
       labelRef.current, 
       theme.bg, 

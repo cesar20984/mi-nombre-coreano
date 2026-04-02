@@ -52,7 +52,10 @@ export default function BirthdateGenerator({ onGenerate }) {
       korean: koreanName,
       romanized: romanized,
       meaning: `Combinación de estilo ${genderText} ensamblada a partir de tu fecha ${day}/${month}/${year}.`,
-      explanation: `Tu apellido "${surnameStr}" fue determinado por el último dígito de tu año de nacimiento. La sílaba intermedia "${monthStr}" proviene del mes seleccionado y la última "${dayStr}" corresponde directamente a tu día exacto. Además, ${genderExplanation}`
+      explanation: `Tu apellido "${surnameStr}" fue determinado por el último dígito de tu año de nacimiento. La sílaba intermedia "${monthStr}" proviene del mes seleccionado y la última "${dayStr}" corresponde directamente a tu día exacto. Además, ${genderExplanation}`,
+      shareType: 'saju',
+      inputName: romanized,
+      shareData: { day, month, year, gender }
     });
   };
 
