@@ -1,4 +1,5 @@
 import SpeakButton from '../components/SpeakButton';
+import SEO from '../components/SEO';
 
 export default function Tattoos() {
   const tattooIdeas = [
@@ -13,16 +14,22 @@ export default function Tattoos() {
   ];
 
   return (
-    <section className="section">
-      <div className="watermark">타투</div>
-      <div className="container">
-        
-        <div className="text-center mb-8 fade-in">
-          <span className="badge">Tinta & Letras</span>
-          <h1 className="display-md mb-4">Palabras para Tatuajes</h1>
-          <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            El Hangul es un alfabeto arquitectónico y muy elegante. Aquí tienes ideas de palabras estéticas y significativas para llevar en la piel.
-          </p>
+    <>
+      <SEO 
+        title="Palabras y Nombres Coreanos para Tatuajes" 
+        description="Explora ideas de palabras y frases aesthetic en coreano (Hangul) con un significado profundo, perfectas para tu próximo tatuaje." 
+        keywords="nombres coreanos para tatuajes, tatuajes en coreano, frases en coreano para tatuajes, hangul aesthetic"
+      />
+      <section className="section">
+        <div className="watermark">타투</div>
+        <div className="container">
+          
+          <div className="text-center mb-8 fade-in">
+            <span className="badge">Tinta & Letras</span>
+            <h1 className="display-md mb-4">Palabras Coreanas para Tatuajes</h1>
+            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+              El Hangul es un alfabeto arquitectónico y muy elegante. Aquí tienes ideas de palabras estéticas y significativas para llevar en la piel.
+            </p>
         </div>
 
         <div className="dictionary-grid fade-in animate-delay-200">
@@ -44,6 +51,7 @@ export default function Tattoos() {
         </div>
 
       </div>
-    </section>
+      </section>
+    </>
   );
 }

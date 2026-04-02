@@ -1,5 +1,6 @@
 import { PawPrint } from 'lucide-react';
 import SpeakButton from '../components/SpeakButton';
+import SEO from '../components/SEO';
 
 export default function Pets() {
   const petNames = [
@@ -14,16 +15,22 @@ export default function Pets() {
   ];
 
   return (
-    <section className="section">
-      <div className="watermark">반려동물</div>
-      <div className="container">
-        
-        <div className="text-center mb-8 fade-in">
-          <span className="badge">Perritos y Gatitos</span>
-          <h1 className="display-md mb-4">Nombres para Mascotas</h1>
-          <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            En Corea los nombres de comida y naturaleza son súper populares para nombrar a perros y gatos por lo tiernos que suenan.
-          </p>
+    <>
+      <SEO 
+        title="Nombres Coreanos para Mascotas | Perros y Gatos" 
+        description="Inspírate con dulces nombres coreanos de comidas y naturaleza ideales para nombrar a tu perro o gatito." 
+        keywords="nombres coreanos para perros, nombres coreanos para gatos, nombres para mascotas en coreano"
+      />
+      <section className="section">
+        <div className="watermark">반려동물</div>
+        <div className="container">
+          
+          <div className="text-center mb-8 fade-in">
+            <span className="badge">Perritos y Gatitos</span>
+            <h1 className="display-md mb-4">Nombres Coreanos para Mascotas</h1>
+            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+              En Corea los nombres de comida y naturaleza son súper populares para nombrar a perros y gatos por lo tiernos que suenan.
+            </p>
         </div>
 
         <div className="grid-cols-2 fade-in animate-delay-200">
@@ -45,6 +52,7 @@ export default function Pets() {
         </div>
 
       </div>
-    </section>
+      </section>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import ClassicBirthdateGenerator from '../components/ClassicBirthdateGenerator';
 import LabelCreator from '../components/LabelCreator';
 import SpeakButton from '../components/SpeakButton';
 import GeneratorExplanation from '../components/GeneratorExplanation';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('transliteration'); // 'transliteration' | 'birthdate' | 'classic'
@@ -34,6 +35,11 @@ export default function Home() {
 
   return (
     <>
+      <SEO 
+        title="Generador de Nombres Coreanos" 
+        description="Generador gratuito para descubrir tu nombre en coreano según tu cumpleaños, sonido por transliteración o a través del tradicional método de lectura de tablas." 
+        keywords="mi nombre en coreano, generador de nombres coreanos, cómo me llamo en coreano, traducir mi nombre al coreano, nombre coreano por cumpleaños, saju"
+      />
       <section className="section">
         <div className="watermark">이름</div>
         <div className="container grid-asymmetric">

@@ -1,4 +1,5 @@
 import SpeakButton from '../components/SpeakButton';
+import SEO from '../components/SEO';
 
 export default function Dictionary() {
   const dictionary = [
@@ -20,15 +21,21 @@ export default function Dictionary() {
   ];
 
   return (
-    <section className="section">
-      <div className="watermark">사전</div>
-      <div className="container">
-        <div className="text-center mb-8 fade-in">
-          <span className="badge">Directorio A-Z</span>
-          <h1 className="display-md mb-4">Diccionario de Nombres</h1>
-          <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            Explora una amplia variedad de nombres coreanos populares y puros (nativos) con sus respectivos significados.
-          </p>
+    <>
+      <SEO 
+        title="Diccionario de Nombres Coreanos | A-Z" 
+        description="Explora un extenso directorio de nombres coreanos nativos femeninos y masculinos, traducidos con su significado exacto al español." 
+        keywords="nombres coreanos para niños, nombres coreanos femeninos, diccionario de nombres coreanos, nombres coreanos con significado"
+      />
+      <section className="section">
+        <div className="watermark">사전</div>
+        <div className="container">
+          <div className="text-center mb-8 fade-in">
+            <span className="badge">Directorio A-Z</span>
+            <h1 className="display-md mb-4">Diccionario de Nombres Coreanos</h1>
+            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+              Explora una amplia variedad de nombres coreanos populares y puros (nativos) con sus respectivos significados.
+            </p>
         </div>
 
         <div className="dictionary-grid fade-in animate-delay-200">
@@ -44,6 +51,7 @@ export default function Dictionary() {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }

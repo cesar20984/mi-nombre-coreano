@@ -1,17 +1,24 @@
 import { BookOpen, HelpCircle } from "lucide-react";
+import SEO from "../components/SEO";
 
 export default function Meanings() {
   return (
-    <section className="section">
-      <div className="watermark">의미</div>
-      <div className="container">
-        
-        <div className="text-center mb-8 fade-in">
-          <span className="badge">Cultura & Tradición</span>
-          <h1 className="display-md mb-4">La Estructura de los Nombres</h1>
-          <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            Un nombre coreano (이름) es profundo. No es solo un sonido, sino un concepto filosófico basado en ciclos de elementos y energía.
-          </p>
+    <>
+      <SEO 
+        title="Significado y Estructura de los Nombres Coreanos" 
+        description="Descubre cómo se estructuran los verdaderos nombres coreanos, el papel del apellido, el concepto filosófico del Hangul y el antiguo sistema del Saju." 
+        keywords="nombres coreanos, estructura de los nombres coreanos, significado de los nombres coreanos, saju, hanja"
+      />
+      <section className="section">
+        <div className="watermark">의미</div>
+        <div className="container">
+          
+          <div className="text-center mb-8 fade-in">
+            <span className="badge">Cultura & Tradición</span>
+            <h1 className="display-md mb-4">Significado y Estructura de los Nombres Coreanos</h1>
+            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+              Un nombre coreano (이름) es profundo. No es solo un sonido, sino un concepto filosófico basado en ciclos de elementos y energía.
+            </p>
         </div>
 
         <div className="grid-cols-2 fade-in animate-delay-200">
@@ -45,6 +52,7 @@ export default function Meanings() {
         </div>
 
       </div>
-    </section>
+      </section>
+    </>
   );
 }
