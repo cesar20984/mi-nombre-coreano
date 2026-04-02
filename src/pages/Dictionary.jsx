@@ -1,5 +1,6 @@
-import SpeakButton from '../components/SpeakButton';
 import SEO from '../components/SEO';
+import ShareableItemCard from '../components/ShareableItemCard';
+import { Book } from 'lucide-react';
 
 export default function Dictionary() {
   const dictionary = [
@@ -38,16 +39,17 @@ export default function Dictionary() {
             </p>
         </div>
 
-        <div className="dictionary-grid fade-in animate-delay-200">
+        <div className="grid-cols-2 fade-in animate-delay-200">
           {dictionary.map((item, idx) => (
-            <div key={idx} className="dict-item">
-              <div className="dict-hangul korean-text" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {item.hangul}
-                <SpeakButton text={item.hangul} size={20} />
-              </div>
-              <div className="dict-roman">{item.roman}</div>
-              <div className="dict-meaning">{item.meaning}</div>
-            </div>
+            <ShareableItemCard 
+                key={idx}
+                icon={Book}
+                hangul={item.hangul}
+                roman={item.roman}
+                desc={item.meaning}
+                shareTitle="Diccionario de Nombres Coreanos"
+                shareText={`Acabo de encontrar este nombre coreano: ${item.roman} (${item.hangul}) - Significa: ${item.meaning}`}
+            />
           ))}
         </div>
       </div>

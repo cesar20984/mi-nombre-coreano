@@ -1,5 +1,6 @@
-import SpeakButton from '../components/SpeakButton';
 import SEO from '../components/SEO';
+import ShareableItemCard from '../components/ShareableItemCard';
+import { Feather } from 'lucide-react';
 
 export default function Tattoos() {
   const categories = [
@@ -118,21 +119,17 @@ export default function Tattoos() {
             <h2 className="title-lg mb-8 text-center" style={{ color: 'var(--primary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               {cat.title}
             </h2>
-            <div className="dictionary-grid animate-delay-200">
+            <div className="grid-cols-2 animate-delay-200">
               {cat.items.map((idea, idx) => (
-                <div key={idx} className="dict-item" style={{ textAlign: 'center', padding: '3rem 1.5rem', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                    <SpeakButton text={idea.hangul} size={24} />
-                  </div>
-                  <div 
-                    className="dict-hangul korean-text" 
-                    style={{ fontSize: '3rem', marginBottom: '1rem', letterSpacing: '-0.05em' }}
-                  >
-                    {idea.hangul}
-                  </div>
-                  <div className="dict-roman" style={{ color: 'var(--on-surface-variant)' }}>{idea.roman}</div>
-                  <div className="body-sm" style={{ color: 'var(--secondary)', fontWeight: 600 }}>{idea.desc}</div>
-                </div>
+                <ShareableItemCard 
+                    key={idx}
+                    icon={Feather}
+                    hangul={idea.hangul}
+                    roman={idea.roman}
+                    desc={idea.desc}
+                    shareTitle="Idea para Tatuaje Coreano"
+                    shareText={`¡Esta palabra coreana sería un tatuaje increíble! ${idea.roman} (${idea.hangul}) - Significa: ${idea.desc}`}
+                />
               ))}
             </div>
           </div>
@@ -143,4 +140,3 @@ export default function Tattoos() {
     </>
   );
 }
-

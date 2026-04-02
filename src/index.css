@@ -145,6 +145,58 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.btn-icon {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: var(--primary-container);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.hover-up {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.hover-up:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.capture-only {
+  display: none;
+}
+
+/* We only show it in the Canvas capture context */
+[data-html2canvas-ignore="true"] ~ .capture-only,
+.card .capture-only {
+  display: block;
+}
+
+/* During normal web browse, we want it to be very discrete or invisible */
+/* But since html2canvas doesn't respect 'display: none', we use absolute position or similar */
+.capture-only {
+  display: block;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+
+
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr;

@@ -1,6 +1,6 @@
 import { PawPrint } from 'lucide-react';
-import SpeakButton from '../components/SpeakButton';
 import SEO from '../components/SEO';
+import ShareableItemCard from '../components/ShareableItemCard';
 
 export default function Pets() {
   const petCategories = [
@@ -148,19 +148,15 @@ export default function Pets() {
             <h2 className="title-lg mb-6" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: '1rem' }}>{category.title}</h2>
             <div className="grid-cols-2">
               {category.names.map((pet, idx) => (
-                <div key={idx} className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-                  <div style={{ padding: '1rem', background: 'var(--surface-container)', borderRadius: '1rem' }}>
-                    <PawPrint size={32} color="var(--primary)" />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                      <h3 className="title-lg korean-text" style={{ margin: 0 }}>{pet.hangul}</h3>
-                      <SpeakButton text={pet.hangul} size={20} />
-                    </div>
-                    <p className="body-md" style={{ fontWeight: 600, color: 'var(--secondary)', marginBottom: '0.5rem' }}>{pet.roman}</p>
-                    <p className="body-sm" style={{ color: 'var(--on-surface-variant)' }}>{pet.desc}</p>
-                  </div>
-                </div>
+                <ShareableItemCard 
+                    key={idx}
+                    icon={PawPrint}
+                    hangul={pet.hangul}
+                    roman={pet.roman}
+                    desc={pet.desc}
+                    shareTitle="Nombre Coreano para Mascota"
+                    shareText={`¡Mira este nombre coreano para mi mascota! ${pet.roman} (${pet.hangul}) - ${pet.desc}`}
+                />
               ))}
             </div>
           </div>
