@@ -1,0 +1,114 @@
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Menu, X, Sparkles } from 'lucide-react';
+
+import Home from './pages/Home';
+import Meanings from './pages/Meanings';
+import Dictionary from './pages/Dictionary';
+import Pets from './pages/Pets';
+import Tattoos from './pages/Tattoos';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
+function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const links = [
+    { name: 'Inicio', path: '/' },
+    { name: 'Significados', path: '/significados' },
+    { name: 'Diccionario A-Z', path: '/diccionario' },
+    { name: 'Para Mascotas', path: '/mascotas' },
+    { name: 'Para Tatuajes', path: '/tatuajes' }
+  ];
+
+  const closeMenu = () => setIsOpen(false);
+
+  return (
+    <>
+      <nav className="navbar glass">
+        <div className="container nav-container">
+          <Link to="/" className="nav-logo" onClick={closeMenu}>
+            <span className="korean-text">이름</span> Mi Nombre Coreano
+          </Link>
+
+          <div className="nav-links">
+            {links.map(link => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          <button className="mobile-menu-btn" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
+        {links.map(link => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            {link.name}
+          </Link>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="section-footer">
+      <div className="container">
+        <div className="nav-logo" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
+          <Sparkles size={20} /> <span className="korean-text">아름다움</span>
+        </div>
+        <p className="body-sm" style={{ opacity: 0.7 }}>
+          Elaborado con amor para acercar la cultura y estética coreana al mundo hispanohablante.
+        </p>
+        <p className="body-sm mt-4" style={{ opacity: 0.5 }}>
+          © {new Date().getFullYear()} Mi Nombre Coreano. Sólo para uso de entretenimiento y estético.
+        </p>
+      </div>
+    </footer>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className="layout">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/significados" element={<Meanings />} />
+            <Route path="/diccionario" element={<Dictionary />} />
+            <Route path="/mascotas" element={<Pets />} />
+            <Route path="/tatuajes" element={<Tattoos />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+export default App;
