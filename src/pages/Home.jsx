@@ -97,29 +97,12 @@ export default function Home() {
       {result && (
         <section className="section section-alt" ref={resultRef} style={{ paddingBottom: '6rem' }}>
           <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            
-            <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '5rem' }}>
-              <h2 className="title-lg mb-4" style={{ color: 'var(--secondary)' }}>Este sería tu nombre en coreano</h2>
-              
-              <button onClick={scrollToCard} className="btn mb-8" style={{ 
-                background: 'transparent', border: '1px solid var(--outline-variant)', color: 'var(--primary)', 
-                borderRadius: '2rem', padding: '0.5rem 1.2rem', fontSize: '0.9rem',
-                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}>
-                👇 Desliza para ver tu tarjeta personalizada
-              </button>
-              
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                <div className="display-lg korean-text" style={{ color: 'var(--primary)', margin: 0, lineHeight: 1 }}>{result.korean}</div>
-                <SpeakButton text={result.korean} size={48} />
-              </div>
-              
-              <div className="title-lg mb-4" style={{ letterSpacing: '0.1em', fontWeight: 600 }}>{result.romanized}</div>
-              <p className="body-lg mb-6" style={{ color: 'var(--primary)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6, fontWeight: 500 }}>{result.meaning}</p>
+            {/* Downloadable Label Component (Now integrated with result display) */}
+            <div ref={cardRef}>
+              <LabelCreator result={result} />
               
               {result.explanation && (
-                <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--outline-variant)', maxWidth: '650px', marginTop: '1rem' }}>
+                <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--outline-variant)', maxWidth: '650px', margin: '3rem auto 0 auto' }}>
                   <p className="body-md" style={{ color: 'var(--on-surface)', lineHeight: 1.6, margin: 0, textAlign: 'left' }}>
                     <strong style={{ color: 'var(--secondary)', display: 'block', marginBottom: '0.5rem' }}>¿Por qué obtuviste este nombre?</strong>
                     {result.explanation}
@@ -127,14 +110,10 @@ export default function Home() {
                 </div>
               )}
             </div>
-
-            {/* Downloadable Label Component */}
-            <div ref={cardRef}>
-              <LabelCreator result={result} />
-            </div>
           </div>
         </section>
       )}
+
     </>
   );
 }

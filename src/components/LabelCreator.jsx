@@ -176,38 +176,21 @@ export default function LabelCreator({ result }) {
         </body>
       </html>
     `);
-    win.document.close();
   };
 
   if (!result) return null;
 
+
   return (
     <div className="fade-in animate-delay-200">
-      <h3 className="title-md mb-6 text-center">Tu Etiqueta Personalizada</h3>
-      
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginBottom: '2rem' }}>
-        {THEMES.map(t => (
-          <button 
-            key={t.id}
-            onClick={() => setActiveThemeId(t.id)}
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '2rem',
-              border: activeThemeId === t.id ? '2px solid var(--primary)' : '1px solid var(--outline-variant)',
-              backgroundColor: activeThemeId === t.id ? 'var(--surface-container-high)' : 'transparent',
-              color: activeThemeId === t.id ? 'var(--primary)' : 'var(--on-surface)',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              transition: 'all 0.2s ease',
-              boxShadow: activeThemeId === t.id ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
-            }}
-          >
-            {t.name}
-          </button>
-        ))}
+      <div className="text-center mb-6">
+        <h2 className="title-lg mb-1" style={{ color: 'var(--secondary)' }}>Este sería tu nombre en coreano</h2>
+        <p className="body-sm" style={{ opacity: 0.6, fontSize: '0.85rem' }}>
+          Copia o comparte tu nombre con esta etiqueta personalizada
+        </p>
       </div>
 
+      
       <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center' }}>
         <div 
           ref={labelRef} 
@@ -302,12 +285,34 @@ export default function LabelCreator({ result }) {
         </div>
       </div>
 
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', marginBottom: '1.5rem' }}>
+        {THEMES.map(t => (
+          <button 
+            key={t.id}
+            onClick={() => setActiveThemeId(t.id)}
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '2rem',
+              border: activeThemeId === t.id ? '2px solid var(--primary)' : '1px solid var(--outline-variant)',
+              backgroundColor: activeThemeId === t.id ? 'var(--surface-container-high)' : 'transparent',
+              color: activeThemeId === t.id ? 'var(--primary)' : 'var(--on-surface)',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {t.name}
+          </button>
+        ))}
+      </div>
+
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: isDesktop ? 'repeat(4, 1fr)' : 'repeat(2, 1fr)', 
         gap: '0.75rem', 
         maxWidth: '600px', 
-        margin: '2rem auto 0 auto' 
+        margin: '0 auto' 
       }}>
         <button className="btn btn-primary" onClick={downloadLabel} style={{ width: '100%', justifyContent: 'center' }}>
           <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
@@ -336,9 +341,10 @@ export default function LabelCreator({ result }) {
 
       {!isDesktop && (
         <p className="body-sm text-center mt-4" style={{ opacity: 0.6 }}>
-          💡 Para resultados óptimos al copiar, usa navegadores modernos como Safari (iOS) o Chrome (Android).
+          💡 Para resultados óptimos al copiar, usa navegadores modernos.
         </p>
       )}
     </div>
   );
 }
+
