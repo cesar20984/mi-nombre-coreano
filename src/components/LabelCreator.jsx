@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
-import { useRef, useState } from 'react';
-import { Download } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { Download, Copy, Share2, Printer, Check } from 'lucide-react';
 import SpeakButton from './SpeakButton';
 
 const THEMES = [
@@ -75,24 +75,108 @@ const THEMES = [
 export default function LabelCreator({ result }) {
   const labelRef = useRef(null);
   const [activeThemeId, setActiveThemeId] = useState('kpop');
+  const [copying, setCopying] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth > 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const theme = THEMES.find(t => t.id === activeThemeId) || THEMES[0];
 
+  const generateCanvas = async () => {
+    if (!labelRef.current) return null;
+    return await html2canvas(labelRef.current, {
+      scale: 3,
+      backgroundColor: theme.bg,
+      useCORS: true,
+      logging: false
+    });
+  };
+
   const downloadLabel = async () => {
-    if (!labelRef.current) return;
+    const canvas = await generateCanvas();
+    if (!canvas) return;
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = `koriname-${result.romanized}.png`;
+    link.href = dataUrl;
+    link.click();
+  };
+
+  const copyLabel = async () => {
+    const canvas = await generateCanvas();
+    if (!canvas) return;
+    
+    setCopying(true);
     try {
-      const canvas = await html2canvas(labelRef.current, {
-        scale: 3, // High resolution
-        backgroundColor: theme.bg // Use solid bg for canvas base
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        try {
+          const item = new ClipboardItem({ "image/png": blob });
+          await navigator.clipboard.write([item]);
+          setTimeout(() => setCopying(false), 2000);
+        } catch (err) {
+          console.error("No se pudo copiar al portapapeles:", err);
+          setCopying(false);
+        }
       });
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = `mi-nombre-coreano-${result.romanized}.png`;
-      link.href = dataUrl;
-      link.click();
     } catch (e) {
-      console.error(e);
+      setCopying(false);
     }
+  };
+
+  const shareLabel = async () => {
+    const canvas = await generateCanvas();
+    if (!canvas) return;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], `koriname-${result.romanized}.png`, { type: 'image/png' });
+      
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Mi Nombre en Coreano',
+            text: `¡Mira mi nombre en coreano generado en Koriname.com! Soy ${result.romanized} (${result.korean})`,
+            files: [file],
+            url: window.location.href
+          });
+        } catch (err) {
+          console.error("Error al compartir:", err);
+        }
+      } else {
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`Mira mi nombre en coreano: ${result.romanized} (${result.korean}) - Descubre el tuyo en ${window.location.href}`)}`;
+        window.open(whatsappUrl, '_blank');
+      }
+    });
+  };
+
+  const printLabel = async () => {
+    const canvas = await generateCanvas();
+    if (!canvas) return;
+    const dataUrl = canvas.toDataURL('image/png');
+    const win = window.open('', '_blank');
+    win.document.write(`
+      <html>
+        <head>
+          <title>Imprimir Tarjeta Koriname</title>
+          <style>
+            body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #fff; }
+            img { max-width: 100%; height: auto; }
+            @media print {
+              img { max-width: 80mm; } 
+            }
+          </style>
+        </head>
+        <body onload="window.print();window.close()">
+          <img src="${dataUrl}" />
+        </body>
+      </html>
+    `);
+    win.document.close();
   };
 
   if (!result) return null;
@@ -101,7 +185,6 @@ export default function LabelCreator({ result }) {
     <div className="fade-in animate-delay-200">
       <h3 className="title-md mb-6 text-center">Tu Etiqueta Personalizada</h3>
       
-      {/* Theme Selector UI */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginBottom: '2rem' }}>
         {THEMES.map(t => (
           <button 
@@ -126,7 +209,6 @@ export default function LabelCreator({ result }) {
       </div>
 
       <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center' }}>
-        {/* Visual Canvas to be Snapshotted */}
         <div 
           ref={labelRef} 
           style={{
@@ -144,7 +226,6 @@ export default function LabelCreator({ result }) {
             boxShadow: '0 10px 40px rgba(0,0,0,0.08)'
           }}
         >
-          {/* Watermark specifically inside the label */}
           <div style={{
             position: 'absolute',
             top: '50%',
@@ -182,7 +263,6 @@ export default function LabelCreator({ result }) {
               {result.korean}
             </h2>
             <div data-html2canvas-ignore="true">
-              {/* Speaker retains normal color locally inside its component but we scale it nicely */}
               <SpeakButton text={result.korean} size={40} />
             </div>
           </div>
@@ -222,11 +302,43 @@ export default function LabelCreator({ result }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
-        <button className="btn btn-primary" onClick={downloadLabel}>
-          <Download size={20} /> Guardar Etiqueta
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isDesktop ? 'repeat(4, 1fr)' : 'repeat(2, 1fr)', 
+        gap: '0.75rem', 
+        maxWidth: '600px', 
+        margin: '2rem auto 0 auto' 
+      }}>
+        <button className="btn btn-primary" onClick={downloadLabel} style={{ width: '100%', justifyContent: 'center' }}>
+          <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
         </button>
+        
+        <button className="btn" onClick={copyLabel} style={{ 
+          width: '100%', justifyContent: 'center', 
+          backgroundColor: copying ? 'var(--success-container)' : 'var(--surface-container-high)',
+          color: copying ? 'var(--on-success-container)' : 'var(--on-surface)',
+          border: '1px solid var(--outline-variant)'
+        }}>
+          {copying ? <Check size={18} /> : <Copy size={18} />}
+          <span style={{ fontSize: '0.9rem' }}>{copying ? 'Copiado' : 'Copiar'}</span>
+        </button>
+
+        <button className="btn" onClick={shareLabel} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
+          <Share2 size={18} /> <span style={{ fontSize: '0.9rem' }}>Compartir</span>
+        </button>
+
+        {isDesktop && (
+          <button className="btn" onClick={printLabel} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)' }}>
+            <Printer size={18} /> <span style={{ fontSize: '0.9rem' }}>Imprimir</span>
+          </button>
+        )}
       </div>
+
+      {!isDesktop && (
+        <p className="body-sm text-center mt-4" style={{ opacity: 0.6 }}>
+          💡 Para resultados óptimos al copiar, usa navegadores modernos como Safari (iOS) o Chrome (Android).
+        </p>
+      )}
     </div>
   );
 }
