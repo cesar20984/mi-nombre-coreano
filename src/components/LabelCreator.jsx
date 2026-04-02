@@ -238,7 +238,7 @@ export default function LabelCreator({ result }) {
         ))}
       </div>
 
-      <div className="action-buttons-container grid-layout" style={{ maxWidth: '600px' }}>
+      <div className="action-buttons-container grid-layout" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <button className="btn btn-primary btn-order-download" onClick={handleDownload} style={{ width: '100%', justifyContent: 'center' }}>
           <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
         </button>

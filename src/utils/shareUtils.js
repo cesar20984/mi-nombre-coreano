@@ -35,41 +35,39 @@ export const downloadAsImage = async (element, filename, bg) => {
 export const copyAsImage = async (element, bg, setCopyStatus) => {
   setCopyStatus(true);
   try {
-    const canvas = await generateCanvas(element, bg);
-    if (!canvas) {
-      setCopyStatus(false);
-      return;
-    }
-
-    canvas.toBlob(async (blob) => {
-      if (!blob) {
-        setCopyStatus(false);
-        return;
-      }
-      try {
-        const item = new ClipboardItem({ "image/png": blob });
-        await navigator.clipboard.write([item]);
-        setTimeout(() => setCopyStatus(false), 2000);
-      } catch (err) {
-        console.error("Copy failed, attempting share fallback via blob:", err);
-        // Fallback to share for mobile safari which rejects async clipboard writes
-        if (navigator.share) {
-            const file = new File([blob], 'koriname-share.png', { type: 'image/png' });
-            try {
-                await navigator.share({
-                title: 'Mi Nombre en Coreano',
-                files: [file]
-                });
-            } catch(e) {}
-        } else {
-            alert('Tu navegador no permite copiar imágenes directamente. Por favor, usa el botón de Compartir o Descargar.');
+    if (window.ClipboardItem) {
+      // Safari requires ClipboardItem to be created synchronously, wrapping a Promise.
+      const makeImagePromise = new Promise(async (resolve) => {
+        try {
+          const canvas = await generateCanvas(element, bg);
+          canvas.toBlob((blob) => resolve(blob));
+        } catch (e) {
+          console.error(e);
+          resolve(null); // Resolve to prevent uncaught error breaking the clip API
         }
-        setCopyStatus(false);
+      });
+      
+      const item = new ClipboardItem({ "image/png": makeImagePromise });
+      await navigator.clipboard.write([item]);
+      setTimeout(() => setCopyStatus(false), 2000);
+    } else {
+      throw new Error("ClipboardItem not supported");
+    }
+  } catch (err) {
+    console.error("Copy failed, attempting share fallback:", err);
+    // Fallback to share for browsers/mobile environments that completely reject copying images
+    try {
+      const canvas = await generateCanvas(element, bg);
+      if (canvas && navigator.share) {
+        canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          const file = new File([blob], 'koriname-share.png', { type: 'image/png' });
+          await navigator.share({ title: 'Mi Nombre en Coreano', files: [file] });
+        });
+      } else {
+        alert('Tu navegador no soporta la copia directa. Por favor, usa Descargar o Compartir.');
       }
-    });
-  } catch (e) {
-    console.error("Copy operation failed:", e);
-    alert('Tu navegador no permite copiar imágenes directamente. Prueba a usar el botón de Compartir o Descargar.');
+    } catch(e) {}
     setCopyStatus(false);
   }
 };
