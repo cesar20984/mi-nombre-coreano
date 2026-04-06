@@ -39,6 +39,33 @@ export default function Home() {
         title="Generador de Nombres Coreanos" 
         description="Generador gratuito para descubrir tu nombre en coreano según tu cumpleaños, sonido por transliteración o a través del tradicional método de lectura de tablas." 
         keywords="mi nombre en coreano, generador de nombres coreanos, cómo me llamo en coreano, traducir mi nombre al coreano, nombre coreano por cumpleaños, saju"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Koriname",
+            "url": "https://koriname.com/",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://koriname.com/diccionario/{search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Generador de Nombres Coreanos",
+            "url": "https://koriname.com/",
+            "applicationCategory": "LifestyleApplication",
+            "operatingSystem": "All",
+            "description": "Herramienta online para generar y descubrir nombres coreanos reales.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]}
       />
       <section className="section">
         <div className="watermark">이름</div>

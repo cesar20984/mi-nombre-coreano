@@ -8,6 +8,36 @@ export default function Meanings() {
         title="Estructura de los Nombres Coreanos: Guía Completa" 
         description="Descubre cómo se estructuran los verdaderos nombres coreanos, el papel del apellido, el concepto filosófico del Hangul y el antiguo sistema del Saju." 
         keywords="nombres coreanos, estructura de los nombres coreanos, significado de los nombres coreanos, saju, hanja"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cómo funciona el apellido en los nombres coreanos?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "En Corea, el apellido va primero. Aproximadamente la mitad de la población comparte los tres apellidos más comunes: Kim, Lee y Park. Estos apellidos representan grandes clanes familiares."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuál es la estructura del nombre de pila (이름)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "El primer nombre o nombre de pila casi siempre consta de dos sílabas. Antiguamente, una de las sílabas (llamada dolimja) se compartía con todos los de la misma generación familiar."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cómo se eligen los nombres coreanos verdaderos (Saju y Hanja)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Los nombres auténticos a menudo derivan de raíces chinas (Hanja), que le dan el significado profundo (ej. Inteligencia, Belleza). La elección específica se hace a menudo mediante el Saju (Los Cuatro Pilares del Destino), evaluando el año, mes, día y hora de nacimiento para balancear elementos astrológicos."
+              }
+            }
+          ]
+        }}
       />
       <section className="section">
         <div className="watermark">의미</div>

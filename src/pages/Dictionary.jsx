@@ -37,6 +37,44 @@ export default function Dictionary() {
         title={`Diccionario de Nombres Coreanos | Letra ${activeLetter.toUpperCase()}`} 
         description="Explora un extenso directorio de nombres coreanos nativos femeninos y masculinos, traducidos con su significado exacto al español." 
         keywords="nombres coreanos para niños, nombres coreanos femeninos, diccionario de nombres coreanos, nombres coreanos con significado"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://koriname.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Diccionario",
+                "item": "https://koriname.com/diccionario"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": `Letra ${activeLetter.toUpperCase()}`,
+                "item": `https://koriname.com/diccionario/${activeLetter}`
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "DefinedTermSet",
+            "name": `Diccionario de Nombres Coreanos - Letra ${activeLetter.toUpperCase()}`,
+            "description": `Nombres coreanos que empiezan con la letra ${activeLetter.toUpperCase()}`,
+            "hasDefinedTerm": filteredData.map(item => ({
+              "@type": "DefinedTerm",
+              "name": item.roman,
+              "termCode": item.hangul,
+              "description": item.meaning
+            }))
+          }
+        ]}
       />
       <section className="section" style={{ paddingBottom: '2rem' }}>
         <div className="container relative">

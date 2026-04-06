@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-export default function SEO({ title, description, keywords }) {
+export default function SEO({ title, description, keywords, schema }) {
   const siteName = 'Koriname';
   const fullTitle = `${title} | ${siteName}`;
 
@@ -20,6 +20,13 @@ export default function SEO({ title, description, keywords }) {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
+
+      {/* Schema.org JSON-LD */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
     </Helmet>
   );
 }
