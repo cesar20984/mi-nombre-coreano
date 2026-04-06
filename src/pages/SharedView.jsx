@@ -134,10 +134,10 @@ export default function SharedView() {
       case 'my-name':
         return generateTransliteration(name);
       case 'saju':
-        if (!day || !month || !year) return generateTransliteration(name);
+        if (!day || !month || !year) return { error: true, message: 'Faltan datos de fecha para generar Saju.' };
         return generateSaju(name, day, month, year, gender);
       case 'meaning':
-        if (!day || !month || !year) return generateTransliteration(name);
+        if (!day || !month || !year) return { error: true, message: 'Faltan datos de fecha para generar el significado.' };
         return generateMeaning(name, day, month, year);
       default:
         return null;
@@ -164,19 +164,21 @@ export default function SharedView() {
     fetchArticle();
   }, [name, type]);
 
-  if (!result) {
+  if (!result || result.error) {
     return (
       <section className="section" style={{ textAlign: 'center', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="container">
-          <h1 className="display-md mb-4">Enlace no válido</h1>
-          <p className="body-lg mb-6" style={{ color: 'var(--on-surface-variant)' }}>Este enlace ha expirado o no es válido.</p>
+        <div className="container" style={{ maxWidth: '400px' }}>
+          <h1 className="display-sm mb-4">{result?.error ? 'Datos incompletos' : 'Enlace no válido'}</h1>
+          <p className="body-lg mb-6" style={{ color: 'var(--on-surface-variant)' }}>
+            {result?.error ? result.message : 'Este enlace ha expirado o no es válido.'}
+          </p>
           <Link to="/" className="btn btn-primary">Ir a Koriname.com</Link>
         </div>
       </section>
     );
   }
 
-  const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  const displayName = name ? (name.charAt(0).toUpperCase() + name.slice(1)) : '';
 
   // Build proper SEO per type — each must be truly unique
   const seoByType = {
