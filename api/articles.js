@@ -12,9 +12,24 @@ export default async function handler(req, res) {
 
   const sql = neon(process.env.DATABASE_URL);
 
+  const authHeader = req.headers.authorization;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const isAuth = authHeader && authHeader === `Bearer ${adminPassword}`;
+
   if (req.method === 'GET') {
-    const { name, type } = req.query;
+    const { name, type, list } = req.query;
     
+    // Auth required for list
+    if (list === 'true') {
+      if (!isAuth) return res.status(401).json({ error: 'Unauthorized' });
+      try {
+        const result = await sql`SELECT id, name, type, created_at, updated_at FROM articles ORDER BY updated_at DESC`;
+        return res.status(200).json(result);
+      } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+
     if (!name || !type) {
       return res.status(400).json({ error: 'Missing name or type parameter' });
     }
@@ -37,11 +52,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    // Check Authorization
-    const authHeader = req.headers.authorization;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-
-    if (!authHeader || authHeader !== `Bearer ${adminPassword}`) {
+    if (!isAuth) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -64,6 +75,22 @@ export default async function handler(req, res) {
       `;
       
       return res.status(200).json({ success: true, article: result[0] });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  if (req.method === 'DELETE') {
+    if (!isAuth) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ error: 'Missing id' });
+
+    try {
+      await sql`DELETE FROM articles WHERE id = ${id}`;
+      return res.status(200).json({ success: true });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Internal Server Error' });
