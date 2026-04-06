@@ -24,8 +24,8 @@ function Navbar() {
 
   const links = [
     { name: 'Inicio', path: '/' },
-    { name: 'Significados', path: '/significados' },
     { name: 'Diccionario A-Z', path: '/diccionario' },
+    { name: 'Estructura', path: '/significados' },
     { name: 'Para Mascotas', path: '/mascotas' },
     { name: 'Para Tatuajes', path: '/tatuajes' }
   ];
@@ -53,6 +53,7 @@ function Navbar() {
           </div>
 
           <button className="mobile-menu-btn" onClick={() => setIsOpen(!isOpen)}>
+            <span>MENÚ</span>
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

@@ -5,7 +5,7 @@ export default function Meanings() {
   return (
     <>
       <SEO 
-        title="Significado y Estructura de los Nombres Coreanos" 
+        title="Estructura de los Nombres Coreanos: Guía Completa" 
         description="Descubre cómo se estructuran los verdaderos nombres coreanos, el papel del apellido, el concepto filosófico del Hangul y el antiguo sistema del Saju." 
         keywords="nombres coreanos, estructura de los nombres coreanos, significado de los nombres coreanos, saju, hanja"
       />
@@ -16,7 +16,7 @@ export default function Meanings() {
           <div className="hero-content text-center mb-8" style={{ margin: '0 auto', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '4rem' }}>
             <span className="badge fade-in mb-4">Cultura & Tradición</span>
             <h1 className="display-md fade-in animate-delay-100 mb-6">
-              Significados y<br/> <span style={{ color: 'var(--secondary)' }}>Estructuras</span>
+              Estructura de los<br/> <span style={{ color: 'var(--secondary)' }}>Nombres Coreanos</span>
             </h1>
             <p className="body-lg fade-in animate-delay-200" style={{ color: 'var(--on-surface-variant)', maxWidth: '500px' }}>
               Un nombre coreano (이름) es profundo. No es solo un sonido, sino un concepto filosófico basado en ciclos de elementos y energía.

@@ -487,12 +487,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mobile-menu-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   background: none;
   border: none;
   color: var(--primary);
   cursor: pointer;
   padding: 0.5rem;
+}
+
+.mobile-menu-btn span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
 }
 
 @media (min-width: 768px) {
