@@ -13,25 +13,33 @@ export default function Meanings() {
         <div className="watermark">의미</div>
         <div className="container">
           
-          <div className="text-center mb-8 fade-in">
-            <span className="badge">Cultura & Tradición</span>
-            <h1 className="display-md mb-4">Significado y Estructura de los Nombres Coreanos</h1>
-            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+          <div className="hero-content text-center mb-8" style={{ margin: '0 auto', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '4rem' }}>
+            <span className="badge fade-in mb-4">Cultura & Tradición</span>
+            <h1 className="display-md fade-in animate-delay-100 mb-6">
+              Significados y<br/> <span style={{ color: 'var(--secondary)' }}>Estructuras</span>
+            </h1>
+            <p className="body-lg fade-in animate-delay-200" style={{ color: 'var(--on-surface-variant)', maxWidth: '500px' }}>
               Un nombre coreano (이름) es profundo. No es solo un sonido, sino un concepto filosófico basado en ciclos de elementos y energía.
             </p>
-        </div>
+          </div>
 
         <div className="grid-cols-2 fade-in animate-delay-200">
-          <div className="card">
-            <BookOpen size={30} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-            <h3 className="title-md mb-2">El Apellido (성)</h3>
-            <p className="body-md" style={{ color: 'var(--on-surface-variant)' }}>
-              En Corea, el apellido va primero. Aproximadamente la mitad de la población comparte los tres apellidos más comunes: Kim, Lee y Park. Estos apellidos representan grandes clanes familiares.
-            </p>
+          <div className="card card-dark" style={{ display: 'flex', gap: '1.5rem', flexDirection: 'column', border: 'none' }}>
+            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', width: 'fit-content' }}>
+               <BookOpen size={24} color="#fff" />
+            </div>
+            <div>
+               <h3 className="title-md mb-2" style={{ color: '#fff' }}>El Apellido (성)</h3>
+               <p className="body-md" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                 En Corea, el apellido va primero. Aproximadamente la mitad de la población comparte los tres apellidos más comunes: Kim, Lee y Park. Estos apellidos representan grandes clanes familiares.
+               </p>
+            </div>
           </div>
           
           <div className="card">
-            <HelpCircle size={30} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+            <div style={{ padding: '1rem', background: 'var(--surface-container)', borderRadius: '12px', width: 'fit-content', marginBottom: '1.5rem' }}>
+               <HelpCircle size={24} color="var(--primary)" />
+            </div>
             <h3 className="title-md mb-2">El Nombre Dado (이름)</h3>
             <p className="body-md" style={{ color: 'var(--on-surface-variant)' }}>
               El primer nombre o nombre de pila casi siempre consta de dos sílabas. Antiguamente, una de las sílabas (llamada "dolimja") se compartía con todos los de la misma generación familiar (ej. hermanos, primos).

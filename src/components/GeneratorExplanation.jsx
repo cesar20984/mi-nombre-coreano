@@ -8,7 +8,7 @@ export default function GeneratorExplanation({ type }) {
       <h2 className="title-md mb-8" style={{ textAlign: 'center', color: 'var(--secondary)' }}>Cómo saber tu nombre en coreano</h2>
 
       <div style={{ display: type === 'birthdate' ? 'block' : 'none' }}>
-        <h2 className="title-lg mb-4">Nombre coreano según tu fecha de nacimiento (Saju)</h2>
+        <h2 className="title-lg mb-4">Generar nombre coreano según tu fecha de nacimiento (Saju)</h2>
         <div className="card" style={{ textAlign: 'left' }}>
           <p className="body-md mb-4">
             Este generador es una versión <strong>súper fácil y divertida</strong>. Básicamente toma el mes, tu día y la terminación de tu año de nacimiento, y lo mezcla con una lista de nombres de la vida real (como Kim o Lee) y sílabas comunes separadas por el estilo que más te guste (femenino, masculino o neutro).

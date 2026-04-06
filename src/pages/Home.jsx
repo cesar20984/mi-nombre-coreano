@@ -55,38 +55,42 @@ export default function Home() {
           </div>
 
           <div className="generators-wrap fade-in animate-delay-300">
-            <div className="tabs">
-              <button 
-                className={`tab-btn ${activeTab === 'transliteration' ? 'active' : ''}`}
-                style={{flex: 1}}
-                onClick={() => setActiveTab('transliteration')}
-              >
-                Transliteración
-              </button>
-              <button 
-                className={`tab-btn ${activeTab === 'birthdate' ? 'active' : ''}`}
-                style={{flex: 1}}
-                onClick={() => setActiveTab('birthdate')}
-              >
-                Saju (Por Fecha)
-              </button>
-              <button 
-                className={`tab-btn ${activeTab === 'classic' ? 'active' : ''}`}
-                style={{flex: 1}}
-                onClick={() => setActiveTab('classic')}
-              >
-                Clásico de Tablas
-              </button>
-            </div>
+            <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
+              <div className="tabs" style={{ margin: 0, borderBottom: '1px solid var(--surface-container)' }}>
+                <button 
+                  className={`tab-btn ${activeTab === 'transliteration' ? 'active' : ''}`}
+                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'transliteration' ? 'transparent' : 'var(--surface-container-low)' }}
+                  onClick={() => setActiveTab('transliteration')}
+                >
+                  Fonética
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'birthdate' ? 'active' : ''}`}
+                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'birthdate' ? 'transparent' : 'var(--surface-container-low)' }}
+                  onClick={() => setActiveTab('birthdate')}
+                >
+                  Por Fecha
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'classic' ? 'active' : ''}`}
+                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'classic' ? 'transparent' : 'var(--surface-container-low)' }}
+                  onClick={() => setActiveTab('classic')}
+                >
+                  Clásico
+                </button>
+              </div>
 
-            <div style={{ display: activeTab === 'birthdate' ? 'block' : 'none' }}>
-              <BirthdateGenerator onGenerate={handleGenerate} />
-            </div>
-            <div style={{ display: activeTab === 'classic' ? 'block' : 'none' }}>
-              <ClassicBirthdateGenerator onGenerate={handleGenerate} />
-            </div>
-            <div style={{ display: activeTab === 'transliteration' ? 'block' : 'none' }}>
-              <TransliterationGenerator onGenerate={handleGenerate} />
+              <div style={{ padding: '2.5rem' }}>
+                <div style={{ display: activeTab === 'birthdate' ? 'block' : 'none' }}>
+                  <BirthdateGenerator onGenerate={handleGenerate} />
+                </div>
+                <div style={{ display: activeTab === 'classic' ? 'block' : 'none' }}>
+                  <ClassicBirthdateGenerator onGenerate={handleGenerate} />
+                </div>
+                <div style={{ display: activeTab === 'transliteration' ? 'block' : 'none' }}>
+                  <TransliterationGenerator onGenerate={handleGenerate} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

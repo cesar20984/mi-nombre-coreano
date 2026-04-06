@@ -67,7 +67,7 @@ export default function Dictionary() {
             <div>
               <span className="badge mb-4 display-inline-block">Directorio A-Z</span>
               <h1 style={{ fontSize: 'clamp(3rem, 6vw, 4rem)', fontWeight: 800, color: 'var(--primary)', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '1.5rem' }}>
-                Diccionario de<br/>los Nombres
+                Diccionario de<br/>Nombres Coreanos
               </h1>
             </div>
             <div>
@@ -146,33 +146,13 @@ export default function Dictionary() {
       <section className="section section-alt mt-8" style={{ padding: '4rem 0', overflow: 'hidden' }}>
         <div className="container relative">
            <div className="watermark" style={{ top: '-10%', right: '5%', fontSize: ' clamp(10rem, 20vw, 15rem)', opacity: 0.03, textAlign: 'right', zIndex: 1, whiteSpace:'nowrap', lineHeight:0.8 }}>사주</div>
-           <div style={{display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', justifyContent: 'space-between', zIndex: 2, position: 'relative'}}>
-             <div style={{ flex: '1 1 400px' }}>
+           <div style={{display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', justifyContent: 'center', zIndex: 2, position: 'relative', textAlign: 'center'}}>
+             <div style={{ flex: '1 1 100%', maxWidth: '600px', margin: '0 auto' }}>
                <h2 className="display-sm mb-4" style={{ fontWeight: 800 }}>¿No encuentras<br/>el nombre ideal?</h2>
-               <p className="body-md mb-6" style={{color: 'var(--on-surface-variant)', maxWidth: '400px'}}>
+               <p className="body-md mb-6" style={{color: 'var(--on-surface-variant)'}}>
                  Nuestro generador utiliza algoritmos basados en la sonoridad tradicional y significados históricos para ofrecerte recomendaciones personalizadas según tu apellido o fecha de nacimiento.
                </p>
                <Link to="/" className="btn btn-primary" style={{ display: 'inline-flex' }}>Probar el Generador Gratis</Link>
-             </div>
-             <div style={{ flex: '1 1 400px', display: 'flex', gap: '1rem', flexDirection: 'column' }}>
-                <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', padding: '1.5rem', background: 'white', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-                  <div style={{ padding: '0.5rem', background: 'var(--surface-container)', borderRadius: '8px' }}>
-                    <Book size={20} color="var(--primary)" />
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: 800, color: 'var(--primary)', marginBottom: '0.25rem', fontSize: '1.1rem' }}>Hanja Tradicional</h4>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--on-surface-variant)' }}>Explora los caracteres chinos que dan origen a los nombres.</p>
-                  </div>
-                </div>
-                <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', padding: '1.5rem', background: 'white', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-                  <div style={{ padding: '0.5rem', background: 'var(--surface-container)', borderRadius: '8px' }}>
-                     <Sparkles size={20} color="var(--primary)" />
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: 800, color: 'var(--primary)', marginBottom: '0.25rem', fontSize: '1.1rem' }}>Top de 2024</h4>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--on-surface-variant)' }}>Descubre las tendencias actuales en las ciudades de Seúl y Busan.</p>
-                  </div>
-                </div>
              </div>
            </div>
         </div>

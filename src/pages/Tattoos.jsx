@@ -106,13 +106,13 @@ export default function Tattoos() {
         <div className="watermark">타투</div>
         <div className="container">
           
-          <div className="text-center mb-8 fade-in">
-            <span className="badge">Tinta & Letras</span>
-            <h1 className="display-md mb-4">Palabras Coreanas para Tatuajes</h1>
-            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+          <div className="hero-content text-center mb-12" style={{ margin: '0 auto', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '4rem' }}>
+            <span className="badge mb-4 display-inline-block">Tinta & Letras</span>
+            <h1 className="display-lg mb-6">Palabras Coreanas para Tatuajes</h1>
+            <p className="body-lg" style={{ color: 'var(--on-surface-variant)', maxWidth: '500px', margin: '0 auto' }}>
               El Hangul es un alfabeto arquitectónico y muy elegante. Aquí tienes ideas de palabras estéticas y significativas para llevar en la piel.
             </p>
-        </div>
+          </div>
 
         {categories.map((cat, catIdx) => (
           <div key={catIdx} className="mb-16 fade-in">

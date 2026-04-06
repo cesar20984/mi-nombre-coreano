@@ -107,10 +107,45 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Cards & Layout */
 .card {
-  background: var(--surface-container-lowest);
-  border-radius: 1rem;
+  background: white;
+  border-radius: 20px;
   padding: 2.5rem;
-  box-shadow: 0 12px 40px rgba(26, 28, 27, 0.05); /* Whisper shadow */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.card-dark {
+  background: var(--primary);
+  color: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-dark h1, .card-dark h2, .card-dark h3, .card-dark h4 {
+  color: white;
+}
+
+.card-light {
+  background: var(--secondary-container);
+  color: var(--primary);
+  border-radius: 20px;
+  padding: 2.5rem;
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 1px solid rgba(255,255,255,0.5);
 }
 
 .watermark {

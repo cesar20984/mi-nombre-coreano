@@ -110,7 +110,7 @@ export default function ClassicBirthdateGenerator({ onGenerate }) {
   };
 
   return (
-    <div className="card fade-in">
+    <div className="fade-in">
       <h3 className="title-md mb-2">Método de Tablas Clásicas</h3>
       <p className="body-sm mb-4" style={{ color: 'var(--secondary)' }}>
         Utiliza el famoso método de las 3 tablas de significados por características para armar tu nombre.

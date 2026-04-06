@@ -135,13 +135,13 @@ export default function Pets() {
         <div className="watermark">반려동물</div>
         <div className="container">
           
-          <div className="text-center mb-8 fade-in">
-            <span className="badge">Perritos y Gatitos</span>
-            <h1 className="display-md mb-4">Nombres Coreanos para Mascotas</h1>
-            <p className="body-lg" style={{ color: 'var(--secondary)', maxWidth: '600px', margin: '0 auto' }}>
+          <div className="hero-content text-center mb-8" style={{ margin: '0 auto', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '4rem' }}>
+            <span className="badge mb-4 display-inline-block">Perritos y Gatitos</span>
+            <h1 className="display-lg mb-6">Nombres Coreanos para Mascotas</h1>
+            <p className="body-lg" style={{ color: 'var(--on-surface-variant)', maxWidth: '500px', margin: '0 auto' }}>
               En Corea los nombres de comida y naturaleza son súper populares para nombrar a perros y gatos por lo tiernos que suenan.
             </p>
-        </div>
+          </div>
 
         {petCategories.map((category, catIdx) => (
           <div key={catIdx} className="mb-12 fade-in">

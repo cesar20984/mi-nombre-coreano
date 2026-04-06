@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" width="100%" height="100%">
   <defs>
     <linearGradient id="stampGreen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#536255" />
-      <stop offset="100%" stop-color="#1b3022" />
+      <stop offset="0%" stop-color="#2C8C33" />
+      <stop offset="100%" stop-color="#116817" />
     </linearGradient>
     
     <linearGradient id="textGreen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#536255" />
-      <stop offset="100%" stop-color="#1b3022" />
+      <stop offset="0%" stop-color="#2C8C33" />
+      <stop offset="100%" stop-color="#116817" />
     </linearGradient>
   </defs>
 
@@ -21,7 +21,7 @@
      <path d="M 38 76 L 72 76" />
   </g>
 
-  <text x="110" y="76" font-family="'Manrope', 'Plus Jakarta Sans', sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5" fill="#061b0e">
-    kori<tspan font-weight="400" fill="url(#textGreen)">name</tspan><tspan fill="#1b3022">.</tspan>
+  <text x="110" y="76" font-family="'Manrope', 'Plus Jakarta Sans', sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5" fill="#1a1c1a">
+    kori<tspan font-weight="400" fill="url(#textGreen)">name</tspan><tspan fill="#116817">.</tspan>
   </text>
 </svg>

@@ -20,7 +20,7 @@ export default function TransliterationGenerator({ onGenerate }) {
   };
 
   return (
-    <div className="card fade-in">
+    <div className="fade-in">
       <h3 className="title-md mb-2">Transliteración Real</h3>
       <p className="body-sm mb-4" style={{ color: 'var(--secondary)' }}>
         Escribe tu nombre real y lo convertiremos fonéticamente al alfabeto coreano (Hangul).
