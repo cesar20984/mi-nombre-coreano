@@ -9,6 +9,7 @@ import Pets from './pages/Pets';
 import Tattoos from './pages/Tattoos';
 import SharedView from './pages/SharedView';
 import NotFound from './pages/NotFound';
+import Admin from './pages/Admin';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -110,6 +111,7 @@ function App() {
             <Route path="/my-name/:name" element={<SharedView />} />
             <Route path="/saju/:name" element={<SharedView />} />
             <Route path="/meaning/:name" element={<SharedView />} />
+            <Route path="/koriname-admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

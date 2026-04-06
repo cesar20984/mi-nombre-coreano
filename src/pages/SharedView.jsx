@@ -1,5 +1,5 @@
 import { useParams, useSearchParams, Link, useLocation } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import LabelCreator from '../components/LabelCreator';
 import SEO from '../components/SEO';
@@ -143,6 +143,26 @@ export default function SharedView() {
     }
   }, [type, name, searchParams]);
 
+  const [articleContent, setArticleContent] = useState(null);
+
+  useEffect(() => {
+    async function fetchArticle() {
+      if (!name || !type) return;
+      try {
+        const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(name)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.content) {
+            setArticleContent(data.content);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching article:", err);
+      }
+    }
+    fetchArticle();
+  }, [name, type]);
+
   if (!result) {
     return (
       <section className="section" style={{ textAlign: 'center', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -211,6 +231,20 @@ export default function SharedView() {
                 {result.explanation}
               </p>
             </div>
+          )}
+
+          {/* Custom Article Content from Database */}
+          {articleContent && (
+            <div 
+              className="fade-in animate-delay-300 article-content" 
+              style={{ 
+                marginTop: '3rem', 
+                padding: '0 1rem', 
+                textAlign: 'left',
+                lineHeight: '1.8'
+              }}
+              dangerouslySetInnerHTML={{ __html: articleContent }}
+            />
           )}
 
           {/* CTA */}
