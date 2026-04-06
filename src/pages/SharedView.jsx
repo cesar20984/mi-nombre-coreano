@@ -25,10 +25,11 @@ const SAJU_DAY_NAMES = {
 // ─── Generator functions ───
 
 function generateTransliteration(name) {
-  const korean = transliterate(name);
+  const result = transliterate(name);
   return {
-    korean: korean || '이름',
+    korean: result.korean || '이름',
     romanized: name,
+    pronunciation: result.pronunciation,
     meaning: 'Transliteración fonética directa al alfabeto Hangul.',
     labelMeaning: 'Transliteración fonética directa al alfabeto Hangul.',
     explanation: 'Este resultado se obtiene leyendo el nombre sílaba a sílaba en español y encontrando los bloques del alfabeto coreano (Hangul) que generan el mismo sonido.'
