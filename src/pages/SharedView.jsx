@@ -207,10 +207,30 @@ export default function SharedView() {
       keywords: `nombre coreano por fecha de nacimiento, saju ${displayName}, ${result.romanized}, ${result.korean}, nombre coreano por cumpleaños`
     },
     'meaning': {
-      title: `${result.romanized} (${result.korean}) — Significado del Nombre Coreano`,
-      description: `El nombre coreano ${result.romanized} (${result.korean}) significa: ${result.meaning}. Descubre el significado del tuyo con el método clásico de tablas en Koriname.com`,
-      keywords: `significado nombre coreano ${result.romanized}, que significa ${result.korean}, ${displayName} significado coreano, nombre coreano por significado`
+      title: result.korean 
+        ? `${result.romanized} (${result.korean}) — Significado del Nombre Coreano`
+        : `${result.romanized} — Significado del Nombre Coreano`,
+      description: `El nombre coreano ${result.romanized} ${result.korean ? `(${result.korean})` : ''} significa: ${result.meaning || 'un significado especial'}. Descubre el significado del tuyo con el método clásico de tablas en Koriname.com`,
+      keywords: `significado nombre coreano ${result.romanized}, que significa ${result.korean || ''}, ${displayName} significado coreano, nombre coreano por significado`
     }
+  };
+
+  const h1ByType = {
+    'my-name': (
+      <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
+        Cómo se escribe <span style={{ color: 'var(--secondary)' }}>{displayName}</span> en Coreano
+      </h1>
+    ),
+    'saju': (
+      <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
+        Nombre Coreano de <span style={{ color: 'var(--secondary)' }}>{displayName}</span> según Saju
+      </h1>
+    ),
+    'meaning': (
+      <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
+        Qué significa el nombre coreano <span style={{ color: 'var(--secondary)' }}>{displayName}</span>
+      </h1>
+    )
   };
 
   const seo = seoByType[type] || seoByType['my-name'];
@@ -229,9 +249,11 @@ export default function SharedView() {
           {/* Intro */}
           <div className="fade-in text-center mb-6">
             <span className="badge">{TYPE_LABELS[type] || 'Nombre Coreano'}</span>
-            <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
-              <span style={{ color: 'var(--secondary)' }}>{displayName}</span> en Coreano
-            </h1>
+            {h1ByType[type] || (
+              <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
+                <span style={{ color: 'var(--secondary)' }}>{displayName}</span> en Coreano
+              </h1>
+            )}
             <p className="body-lg" style={{ color: 'var(--on-surface-variant)' }}>
               Así suena y se escribe en el alfabeto Hangul
             </p>
