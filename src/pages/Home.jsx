@@ -165,8 +165,15 @@ export default function Home() {
                       <li>Alternativas coreanas reales</li>
                       <li>Significado cultural</li>
                     </ul>
-                    <Link 
-                      to={`/${result.shareType}/${encodeURIComponent(result.inputName.toLowerCase())}`} 
+                      <Link 
+                      to={`/${result.shareType}/${encodeURIComponent(result.inputName.toLowerCase())}${
+                        result.shareData ? `?${new URLSearchParams({
+                          ...(result.shareData.day && { d: result.shareData.day }),
+                          ...(result.shareData.month && { m: result.shareData.month }),
+                          ...(result.shareData.year && { y: result.shareData.year }),
+                          ...(result.shareData.gender && { g: result.shareData.gender })
+                        }).toString()}` : ''
+                      }`}
                       className="btn btn-primary"
                       style={{ width: '100%', fontSize: '0.95rem' }}
                     >
