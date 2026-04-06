@@ -11,24 +11,12 @@ import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
+// Note: Ensure the build script handles Node ES modules correctly.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Read routes config (we parse it manually to avoid needing JSX transpilation)
-const routesFile = readFileSync(resolve(__dirname, '../src/routes.js'), 'utf-8');
-
-// Extract staticRoutes array from the file
-const routeRegex = /\{\s*path:\s*'([^']+)',\s*priority:\s*'([^']+)',\s*changefreq:\s*'([^']+)'\s*\}/g;
-const routes = [];
-let match;
-
-while ((match = routeRegex.exec(routesFile)) !== null) {
-  routes.push({
-    path: match[1],
-    priority: match[2],
-    changefreq: match[3],
-  });
-}
+// Import the static routes directly 
+import { staticRoutes as routes } from '../src/routes.js';
 
 if (routes.length === 0) {
   console.error('❌ No routes found in src/routes.js');

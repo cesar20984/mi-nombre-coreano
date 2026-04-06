@@ -103,6 +103,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/significados" element={<Meanings />} />
             <Route path="/diccionario" element={<Dictionary />} />
+            <Route path="/diccionario/:letter" element={<Dictionary />} />
             <Route path="/mascotas" element={<Pets />} />
             <Route path="/tatuajes" element={<Tattoos />} />
             <Route path="/my-name/:name" element={<SharedView />} />
