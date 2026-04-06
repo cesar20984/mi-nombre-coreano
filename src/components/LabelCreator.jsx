@@ -143,22 +143,24 @@ export default function LabelCreator({ result, isSharedView }) {
             boxShadow: '0 10px 40px rgba(0,0,0,0.08)'
           }}
         >
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontFamily: '"Noto Serif KR", serif',
-            fontSize: '12rem',
-            color: theme.wm,
-            opacity: theme.wmOpacity,
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-            fontWeight: 900,
-            transition: 'color 0.5s ease'
-          }}>
-            이름
-          </div>
+          {result.korean && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontFamily: '"Noto Serif KR", serif',
+              fontSize: '12rem',
+              color: theme.wm,
+              opacity: theme.wmOpacity,
+              pointerEvents: 'none',
+              whiteSpace: 'nowrap',
+              fontWeight: 900,
+              transition: 'color 0.5s ease'
+            }}>
+              이름
+            </div>
+          )}
 
           <p style={{
             color: theme.sub,
@@ -171,16 +173,18 @@ export default function LabelCreator({ result, isSharedView }) {
           }}>Koriname.com</p>
           
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', position: 'relative' }}>
-            <h2 className="korean-text" style={{ 
-              fontSize: '5rem', 
-              color: theme.hangul, 
-              lineHeight: 1.1,
-              transition: 'color 0.5s ease'
-            }}>
-              {result.korean}
-            </h2>
+            {result.korean && (
+              <h2 className="korean-text" style={{ 
+                fontSize: '5rem', 
+                color: theme.hangul, 
+                lineHeight: 1.1,
+                transition: 'color 0.5s ease'
+              }}>
+                {result.korean}
+              </h2>
+            )}
             <div data-html2canvas-ignore="true">
-              <SpeakButton text={result.korean} size={40} />
+              <SpeakButton text={result.korean || result.romanized} size={40} />
             </div>
           </div>
           
@@ -248,7 +252,7 @@ export default function LabelCreator({ result, isSharedView }) {
           </div>
 
           {/* Mobile floating action buttons INSIDE the label */}
-          {!isDesktop && (
+          {!isDesktop && !result.noActions && (
             <div 
               data-html2canvas-ignore="true"
               className="label-mobile-actions"
@@ -299,30 +303,33 @@ export default function LabelCreator({ result, isSharedView }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', marginBottom: '1.5rem' }}>
-        {THEMES.map(t => (
-          <button 
-            key={t.id}
-            onClick={() => setActiveThemeId(t.id)}
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '2rem',
-              border: activeThemeId === t.id ? '2px solid var(--primary)' : '1px solid var(--outline-variant)',
-              backgroundColor: activeThemeId === t.id ? 'var(--surface-container-high)' : 'transparent',
-              color: activeThemeId === t.id ? 'var(--primary)' : 'var(--on-surface)',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-              fontWeight: 500,
-              transition: 'all 0.2s ease'
-            }}
-          >
-            {t.name}
-          </button>
-        ))}
-      </div>
+      {!result.noActions && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', marginBottom: '1.5rem' }}>
+          {THEMES.map(t => (
+            <button 
+              key={t.id}
+              onClick={() => setActiveThemeId(t.id)}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '2rem',
+                border: activeThemeId === t.id ? '2px solid var(--primary)' : '1px solid var(--outline-variant)',
+                backgroundColor: activeThemeId === t.id ? 'var(--surface-container-high)' : 'transparent',
+                color: activeThemeId === t.id ? 'var(--primary)' : 'var(--on-surface)',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {t.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Desktop external buttons — hidden on mobile via CSS */}
-      <div className="action-buttons-container grid-layout label-desktop-actions" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      {!result.noActions && (
+        <div className="action-buttons-container grid-layout label-desktop-actions" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <button className="btn btn-primary btn-order-download" onClick={handleDownload} style={{ width: '100%', justifyContent: 'center' }}>
           <Download size={18} /> <span style={{ fontSize: '0.9rem' }}>Guardar</span>
         </button>
@@ -345,6 +352,7 @@ export default function LabelCreator({ result, isSharedView }) {
           <Printer size={18} /> <span style={{ fontSize: '0.9rem' }}>Imprimir</span>
         </button>
       </div>
+      )}
     </div>
   );
 }

@@ -136,20 +136,22 @@ export default function SharedView() {
       case 'saju':
         if (!day || !month || !year) {
           return {
-            korean: '이름',
+            korean: '',
             romanized: name,
-            meaning: 'Información de fecha de nacimiento no proporcionada.',
-            explanation: 'Para generar la pronunciación e imagen correctas según el Saju, se requiere la información de fecha.'
+            meaning: null,
+            explanation: null,
+            noActions: true
           };
         }
         return generateSaju(name, day, month, year, gender);
       case 'meaning':
         if (!day || !month || !year) {
           return {
-            korean: '이름',
+            korean: '',
             romanized: name,
-            meaning: 'Información de fecha de nacimiento no proporcionada.',
-            explanation: 'Para generar la pronunciación e imagen correctas según las tablas clásicas, se requiere la información de fecha.'
+            meaning: null,
+            explanation: null,
+            noActions: true
           };
         }
         return generateMeaning(name, day, month, year);
