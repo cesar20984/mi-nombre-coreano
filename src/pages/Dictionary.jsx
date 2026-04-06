@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { Book, Search, Sparkles } from 'lucide-react';
+import { Search } from 'lucide-react';
 import SpeakButton from '../components/SpeakButton';
+import { fullDictionary } from '../data/dictionaryData';
 
 export default function Dictionary() {
   const { letter } = useParams();
@@ -12,28 +13,6 @@ export default function Dictionary() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-  const fullDictionary = [
-    { hangul: '아름', roman: 'Areum', meaning: 'Significa "Belleza" en su forma más pura. A diferencia de otros nombres, Areum es un término nativo coreano que evoca armonía natural.', pop: true, style: 'light' },
-    { hangul: '바다', roman: 'Bada', meaning: 'Significa "Océano" o "Mar". Representa una mente profunda e inmensa.', style: 'light' },
-    { hangul: '빛나', roman: 'Bitna', meaning: 'Significa "Brillar". Es un nombre que evoca el resplandor de una estrella o la luz del sol reflejada en el agua clara.', style: 'light-large-hangul' },
-    { hangul: '보라', roman: 'Bora', meaning: 'Significa "Púrpura". Un nombre que representa nobleza y encanto.', style: 'light' },
-    { hangul: '대현', roman: 'Dae-hyun', meaning: 'SIGNIFICADO: GRAN VIRTUD.', style: 'dark-green' },
-    { hangul: '은지', roman: 'Eun-ji', meaning: 'Combinación de Eun (Plata/Bondad) y Ji (Sabiduría). Representa a una persona de intelecto brillante y corazón generoso.', style: 'light' },
-    { hangul: '은우', roman: 'Eun-woo', meaning: 'Misericordioso y excepcional.', style: 'light' },
-    { hangul: '하나', roman: 'Hana', meaning: 'Significa "Uno" o "Primero".', style: 'light' },
-    { hangul: '하늘', roman: 'Haneul', meaning: 'Nombre unisex que significa "Cielo". Simboliza la amplitud de espíritu y la aspiración constante hacia la libertad y la paz.', style: 'light' },
-    { hangul: '지민', roman: 'Ji-min', meaning: 'Afiable y de intelecto rápido.', style: 'light' },
-    { hangul: '준', roman: 'Joon', meaning: 'Un nombre clásico que denota "Talento" o "Excelencia".', style: 'light' },
-    { hangul: '준호', roman: 'Jun-ho', meaning: 'Talentoso e inmenso.', style: 'light' },
-    { hangul: '미란', roman: 'Mi-ran', meaning: 'Hermosa orquídea.', style: 'light' },
-    { hangul: '미소', roman: 'Miso', meaning: 'Un nombre corto y dulce que significa literalmente "Sonrisa". Refleja una personalidad radiante que trae luz a los demás.', style: 'light' },
-    { hangul: '나비', roman: 'Nabi', meaning: 'Significa "Mariposa" en coreano nativo.', style: 'light' },
-    { hangul: '세아', roman: 'Se-ah', meaning: 'Mundo elegante.', style: 'light' },
-    { hangul: '서준', roman: 'Seo-jun', meaning: 'Auspicioso y talentoso.', style: 'light' },
-    { hangul: '수진', roman: 'Su-jin', meaning: 'Hermosa y genuina.', style: 'light' },
-    { hangul: '태양', roman: 'Taeyang', meaning: 'Significa "Sol".', style: 'light' },
-  ];
 
   // Logic: First filter by search term if exists. Otherwise, filter by active letter.
   const filteredData = useMemo(() => {

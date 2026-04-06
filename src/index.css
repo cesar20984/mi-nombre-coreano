@@ -47,7 +47,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Typography Scale */
 .display-lg { font-size: clamp(3rem, 8vw, 5rem); line-height: 1.1; }
-.display-md { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; }
+.display-md { font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.1; }
+@media (max-width: 640px) {
+  .display-md { font-size: 2rem; letter-spacing: -0.03em; }
+}
 .title-lg { font-size: 2rem; }
 .title-md { font-size: 1.5rem; }
 .body-lg { font-size: 1.125rem; }
@@ -180,6 +183,18 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.hero-content {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    text-align: left;
+    margin-bottom: 0;
+  }
+}
+
 .btn-icon {
   background: var(--surface-container-high);
   color: var(--on-surface);
@@ -280,6 +295,11 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .section { padding: 3rem 0; }
+  .grid-asymmetric { gap: 2rem; }
+}
+
 .section-alt {
   background-color: var(--surface-container-low);
 }
@@ -323,42 +343,48 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 2px solid var(--primary);
 }
 
-/* Generators Container */
-.tabs {
+/* Modern Tabs System */
+.tabs-modern {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(195, 200, 193, 0.3);
+  background: var(--surface-container-low);
+  padding: 0.4rem;
+  border-radius: 1rem 1rem 0 0;
+  gap: 0.25rem;
 }
 
-.tab-btn {
+.tab-modern-btn {
+  flex: 1;
   background: none;
   border: none;
-  padding: 1rem 0;
-  font-weight: 600;
-  font-size: 1.1rem;
+  padding: 1rem 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   color: var(--on-surface-variant);
   cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
+  border-radius: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.tab-btn:hover {
-  color: var(--secondary);
-}
-
-.tab-btn.active {
+.tab-modern-btn:hover:not(.active) {
+  background: var(--surface-container);
   color: var(--primary);
 }
 
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--primary);
+.tab-modern-btn.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 480px) {
+  .tab-modern-btn { font-size: 0.75rem; padding: 0.8rem 0.25rem; }
 }
 
 .fade-in {

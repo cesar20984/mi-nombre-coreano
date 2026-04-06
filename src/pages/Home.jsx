@@ -44,43 +44,43 @@ export default function Home() {
         <div className="watermark">이름</div>
         <div className="container grid-asymmetric">
           
-          <div className="hero-content">
+          <div className="hero-content" style={{ marginBottom: '1rem' }}>
             <span className="badge fade-in">Generador de nombres en coreano</span>
-            <h1 className="display-md fade-in animate-delay-100 mb-4">
+            <h1 className="display-md fade-in animate-delay-100" style={{ marginBottom: '0.75rem' }}>
               Mi Nombre en Coreano: <br/> <span style={{ color: 'var(--secondary)' }}>Descúbrelo con Nuestro Generador Gratis</span>
             </h1>
-            <p className="body-lg fade-in animate-delay-200" style={{ color: 'var(--on-surface-variant)', maxWidth: '400px' }}>
-              Convierte tu nombre al coreano por sonido o según tu fecha de nacimiento (Saju)...
+            <p className="body-lg fade-in animate-delay-200" style={{ color: 'var(--on-surface-variant)', maxWidth: '400px', marginBottom: '0' }}>
+              Convierte tu nombre al coreano por sonido o según tu fecha de nacimiento (Saju).
             </p>
           </div>
 
           <div className="generators-wrap fade-in animate-delay-300">
             <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
-              <div className="tabs" style={{ margin: 0, borderBottom: '1px solid var(--surface-container)' }}>
+              <div className="tabs-modern">
                 <button 
-                  className={`tab-btn ${activeTab === 'transliteration' ? 'active' : ''}`}
-                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'transliteration' ? 'transparent' : 'var(--surface-container-low)' }}
+                  className={`tab-modern-btn ${activeTab === 'transliteration' ? 'active' : ''}`}
                   onClick={() => setActiveTab('transliteration')}
                 >
+                  <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>Método 1</span>
                   Fonética
                 </button>
                 <button 
-                  className={`tab-btn ${activeTab === 'birthdate' ? 'active' : ''}`}
-                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'birthdate' ? 'transparent' : 'var(--surface-container-low)' }}
+                  className={`tab-modern-btn ${activeTab === 'birthdate' ? 'active' : ''}`}
                   onClick={() => setActiveTab('birthdate')}
                 >
+                  <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>Método 2</span>
                   Por Fecha
                 </button>
                 <button 
-                  className={`tab-btn ${activeTab === 'classic' ? 'active' : ''}`}
-                  style={{flex: 1, padding: '1.25rem', borderRadius: 0, border: 'none', background: activeTab === 'classic' ? 'transparent' : 'var(--surface-container-low)' }}
+                  className={`tab-modern-btn ${activeTab === 'classic' ? 'active' : ''}`}
                   onClick={() => setActiveTab('classic')}
                 >
-                  Clásico
+                  <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>Método 3</span>
+                  Tablas
                 </button>
               </div>
 
-              <div style={{ padding: '2.5rem' }}>
+              <div style={{ padding: '2rem 1.5rem' }}>
                 <div style={{ display: activeTab === 'birthdate' ? 'block' : 'none' }}>
                   <BirthdateGenerator onGenerate={handleGenerate} />
                 </div>
