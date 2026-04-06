@@ -184,8 +184,23 @@ export default function LabelCreator({ result, isSharedView }) {
             </div>
           </div>
           
+          {result.pronunciation && (
+            <div style={{
+              marginTop: '1rem',
+              fontSize: '0.9rem',
+              color: theme.sub,
+              fontWeight: 500,
+              fontStyle: 'italic',
+              opacity: 0.8,
+              letterSpacing: '0.1em',
+              transition: 'color 0.5s ease'
+            }}>
+              ({result.pronunciation})
+            </div>
+          )}
+          
           <div style={{
-            marginTop: '1.5rem',
+            marginTop: result.pronunciation ? '0.75rem' : '1.5rem',
             position: 'relative',
             transition: 'color 0.5s ease'
           }}>
@@ -200,7 +215,7 @@ export default function LabelCreator({ result, isSharedView }) {
               paddingBottom: '0.5rem',
               transition: 'all 0.5s ease'
             }}>
-              {result.pronunciation ? `(${result.pronunciation}) sería ${result.romanized}` : result.romanized}
+              {result.romanized}
             </span>
           </div>
 
