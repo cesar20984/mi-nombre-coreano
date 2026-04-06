@@ -8,10 +8,11 @@ export default function TransliterationGenerator({ onGenerate }) {
   const handleGenerate = () => {
     if (!name.trim()) return;
 
-    const korean = transliterate(name);
+    const data = transliterate(name);
     onGenerate({
-      korean: korean || '이름',
-      romanized: name,
+      korean: data.korean || '이름',
+      romanized: name, // The input name
+      pronunciation: data.pronunciation,
       meaning: 'La transliteración fonética de tu nombre a caracteres Hangul.',
       explanation: 'Para lograr este resultado leímos tu nombre sílaba a sílaba en español y encontramos los bloques del alfabeto coreano (Hangul) que generan el mismo sonido o uno idéntico. Así es exactamente como un nativo trataría de pronunciarlo y escribirlo basándose solo en cómo suena al escucharlo, dándole a tu nombre de nacimiento el perfecto look "Hallyu".',
       shareType: 'my-name',

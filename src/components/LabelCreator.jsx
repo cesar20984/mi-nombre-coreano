@@ -200,7 +200,7 @@ export default function LabelCreator({ result, isSharedView }) {
               paddingBottom: '0.5rem',
               transition: 'all 0.5s ease'
             }}>
-              {result.romanized}
+              {result.pronunciation ? `(${result.pronunciation}) sería ${result.romanized}` : result.romanized}
             </span>
           </div>
 

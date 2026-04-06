@@ -32,9 +32,40 @@ const phoneticMap = {
   'za': '사', 'ze': '세', 'zi': '시', 'zo': '소', 'zu': '수',
 };
 
+const pCharMap = {
+  'a': 'a', 'b': 'bi', 'c': 'shi', 'd': 'di', 'e': 'e',
+  'f': 'e-peu', 'g': 'ji', 'h': 'e-i-chi', 'i': 'a-i', 'j': 'je-i',
+  'k': 'ke-i', 'l': 'el', 'm': 'em', 'n': 'en', 'o': 'o',
+  'p': 'pi', 'q': 'kyu', 'r': 'a-reu', 's': 'e-seu', 't': 'ti',
+  'u': 'yu', 'v': 'beu-i', 'w': 'deo-beul-yu', 'x': 'ek-seu', 'y': 'wa-i', 'z': 'je-teu',
+  'ñ': 'ni',
+};
+
+const pPhoneticMap = {
+  'ba': 'ba', 'be': 'be', 'bi': 'bi', 'bo': 'bo', 'bu': 'bu',
+  'ca': 'ka', 'ce': 'se', 'ci': 'shi', 'co': 'ko', 'cu': 'ku',
+  'da': 'da', 'de': 'de', 'di': 'di', 'do': 'do', 'du': 'du',
+  'fa': 'pa', 'fe': 'pe', 'fi': 'pi', 'fo': 'po', 'fu': 'pu',
+  'ga': 'ga', 'ge': 'he', 'gi': 'hi', 'go': 'go', 'gu': 'gu',
+  'ha': 'a', 'he': 'e', 'hi': 'i', 'ho': 'o', 'hu': 'u',
+  'ja': 'ha', 'je': 'he', 'ji': 'hi', 'jo': 'ho', 'ju': 'hu',
+  'ka': 'ka', 'ke': 'ke', 'ki': 'ki', 'ko': 'ko', 'ku': 'ku',
+  'la': 'ra', 'le': 're', 'li': 'ri', 'lo': 'ro', 'lu': 'ru',
+  'ma': 'ma', 'me': 'me', 'mi': 'mi', 'mo': 'mo', 'mu': 'mu',
+  'na': 'na', 'ne': 'ne', 'ni': 'ni', 'no': 'no', 'nu': 'nu',
+  'pa': 'pa', 'pe': 'pe', 'pi': 'pi', 'po': 'po', 'pu': 'pu',
+  'ra': 'ra', 're': 're', 'ri': 'ri', 'ro': 'ro', 'ru': 'ru',
+  'sa': 'sa', 'se': 'se', 'si': 'shi', 'so': 'so', 'su': 'su',
+  'ta': 'ta', 'te': 'te', 'ti': 'ti', 'to': 'to', 'tu': 'tu',
+  'va': 'ba', 've': 'be', 'vi': 'bi', 'vo': 'bo', 'vu': 'bu',
+  'ya': 'ya', 'ye': 'ye', 'yo': 'yo', 'yu': 'yu',
+  'za': 'sa', 'ze': 'se', 'zi': 'shi', 'zo': 'so', 'zu': 'su',
+};
+
 export function transliterate(input) {
   let lower = input.toLowerCase().replace(/[^a-zñ]/g, '');
   let result = '';
+  let pronunciation = '';
   
   let i = 0;
   while(i < lower.length) {
@@ -42,12 +73,16 @@ export function transliterate(input) {
       let pair = lower.substring(i, i+2);
       if (phoneticMap[pair]) {
         result += phoneticMap[pair];
+        pronunciation += (pronunciation ? '-' : '') + pPhoneticMap[pair];
         i += 2;
         continue;
       }
     }
-    result += charMap[lower[i]] || '';
+    if (charMap[lower[i]]) {
+      result += charMap[lower[i]];
+      pronunciation += (pronunciation ? '-' : '') + pCharMap[lower[i]];
+    }
     i++;
   }
-  return result;
+  return { korean: result, pronunciation: pronunciation.toLowerCase() };
 }

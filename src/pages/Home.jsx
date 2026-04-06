@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import BirthdateGenerator from '../components/BirthdateGenerator';
 import TransliterationGenerator from '../components/TransliterationGenerator';
 import ClassicBirthdateGenerator from '../components/ClassicBirthdateGenerator';
@@ -10,6 +11,7 @@ import SEO from '../components/SEO';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('transliteration'); // 'transliteration' | 'birthdate' | 'classic'
   const [result, setResult] = useState(null);
+  const [hasArticle, setHasArticle] = useState(false);
   const resultRef = useRef(null);
   const cardRef = useRef(null);
 
@@ -26,6 +28,22 @@ export default function Home() {
       const element = resultRef.current;
       const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
+
+      // Check if this result has an extended article in the DB
+      const checkArticle = async () => {
+        try {
+          const res = await fetch(`/api/articles?type=${result.shareType}&name=${encodeURIComponent(result.inputName.toLowerCase())}`);
+          if (res.ok) {
+            const data = await res.json();
+            setHasArticle(!!data.content);
+          } else {
+            setHasArticle(false);
+          }
+        } catch (e) {
+          setHasArticle(false);
+        }
+      };
+      checkArticle();
     }
   }, [result]);
 
@@ -138,6 +156,26 @@ export default function Home() {
             <div ref={cardRef}>
               <LabelCreator result={result} />
               
+              {hasArticle && (
+                <div className="fade-in animate-delay-300" style={{ marginTop: '2rem', textAlign: 'center' }}>
+                  <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--outline-variant)', display: 'inline-block', maxWidth: '400px', width: '100%' }}>
+                    <h4 className="body-md mb-2" style={{ fontWeight: 'bold' }}>Más sobre este nombre:</h4>
+                    <ul style={{ textAlign: 'left', margin: '0 auto 1.5rem auto', paddingLeft: '1.5rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                      <li>Cómo se usaría en Corea</li>
+                      <li>Alternativas coreanas reales</li>
+                      <li>Significado cultural</li>
+                    </ul>
+                    <Link 
+                      to={`/${result.shareType}/${encodeURIComponent(result.inputName.toLowerCase())}`} 
+                      className="btn btn-primary"
+                      style={{ width: '100%', fontSize: '0.95rem' }}
+                    >
+                      Ver explicación completa
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               {result.explanation && (
                 <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--outline-variant)', maxWidth: '650px', margin: '3rem auto 0 auto' }}>
                   <p className="body-md" style={{ color: 'var(--on-surface)', lineHeight: 1.6, margin: 0, textAlign: 'left' }}>
