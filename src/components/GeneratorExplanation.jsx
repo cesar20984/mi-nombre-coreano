@@ -4,8 +4,11 @@ import SpeakButton from './SpeakButton';
 export default function GeneratorExplanation({ type }) {
   return (
     <div className="fade-in animate-delay-200" id="explicacion-zona">
+      {/* H2 #1: General SEO keyword */}
+      <h2 className="title-md mb-8" style={{ textAlign: 'center', color: 'var(--secondary)' }}>Cómo saber tu nombre en coreano</h2>
+
       <div style={{ display: type === 'birthdate' ? 'block' : 'none' }}>
-        <h2 className="title-lg mb-4">Saju (Tu Cumpleaños)</h2>
+        <h2 className="title-lg mb-4">Nombre coreano según tu fecha de nacimiento (Saju)</h2>
         <div className="card" style={{ textAlign: 'left' }}>
           <p className="body-md mb-4">
             Este generador es una versión <strong>súper fácil y divertida</strong>. Básicamente toma el mes, tu día y la terminación de tu año de nacimiento, y lo mezcla con una lista de nombres de la vida real (como Kim o Lee) y sílabas comunes separadas por el estilo que más te guste (femenino, masculino o neutro).
@@ -20,7 +23,7 @@ export default function GeneratorExplanation({ type }) {
       </div>
 
       <div style={{ display: type === 'classic' ? 'block' : 'none' }}>
-        <h2 className="title-lg mb-4">El Juego Clásico de las 3 Tablas</h2>
+        <h2 className="title-lg mb-4">Crear nombre coreano con tablas (método clásico)</h2>
         <div className="card" style={{ textAlign: 'left' }}>
           <p className="body-md mb-4">
             Alrededor del mundo, todos los nombres tienen un fondo interesante. En Corea del Sur, la enorme mayoría de los nombres se forman usando <strong>tres sílabas</strong>.
@@ -80,7 +83,7 @@ export default function GeneratorExplanation({ type }) {
       </div>
 
       <div style={{ display: type === 'transliteration' ? 'block' : 'none' }}>
-        <h2 className="title-lg mb-4">Tu Nombre tal cual Suena</h2>
+        <h2 className="title-lg mb-4">Traducir tu nombre al coreano por sonido (Hangul)</h2>
         <div className="card" style={{ textAlign: 'left' }}>
           <p className="body-md mb-4">
             ¿Alguna vez cruzó por tu mente la pregunta: <strong>¿Cómo rayos deletrearían los coreanos mi propio nombre?</strong> El alfabeto coreano, llamado <strong>Hangul (한글)</strong>, es súper lógico y está totalmente basado en el sonido.

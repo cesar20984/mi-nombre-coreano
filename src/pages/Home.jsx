@@ -47,10 +47,10 @@ export default function Home() {
           <div className="hero-content">
             <span className="badge fade-in">Generador de nombres en coreano</span>
             <h1 className="display-md fade-in animate-delay-100 mb-4">
-              Descubre Tu <br/> <span style={{ color: 'var(--secondary)' }}>Nombre Coreano</span>
+              Mi Nombre en Coreano: <br/> <span style={{ color: 'var(--secondary)' }}>Descúbrelo con Nuestro Generador Gratis</span>
             </h1>
             <p className="body-lg fade-in animate-delay-200" style={{ color: 'var(--on-surface-variant)', maxWidth: '400px' }}>
-              Ya sea mediante tu fecha de nacimiento (Saju) o una transliteración directa desde el español.
+              Convierte tu nombre al coreano por sonido o según tu fecha de nacimiento (Saju)...
             </p>
           </div>
 
