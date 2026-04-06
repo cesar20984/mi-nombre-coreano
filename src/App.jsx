@@ -36,8 +36,8 @@ function Navbar() {
     <>
       <nav className="navbar glass">
         <div className="container nav-container">
-          <Link to="/" className="nav-logo" onClick={closeMenu}>
-            <span className="korean-text">이름</span> Koriname
+          <Link to="/" className="nav-logo" onClick={closeMenu} style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.svg" alt="Koriname Logo" style={{ height: '36px', width: 'auto', display: 'block' }} />
           </Link>
 
           <div className="nav-links">
