@@ -79,9 +79,15 @@ export default function Home() {
               </button>
             </div>
 
-            {activeTab === 'birthdate' && <BirthdateGenerator onGenerate={handleGenerate} />}
-            {activeTab === 'classic' && <ClassicBirthdateGenerator onGenerate={handleGenerate} />}
-            {activeTab === 'transliteration' && <TransliterationGenerator onGenerate={handleGenerate} />}
+            <div style={{ display: activeTab === 'birthdate' ? 'block' : 'none' }}>
+              <BirthdateGenerator onGenerate={handleGenerate} />
+            </div>
+            <div style={{ display: activeTab === 'classic' ? 'block' : 'none' }}>
+              <ClassicBirthdateGenerator onGenerate={handleGenerate} />
+            </div>
+            <div style={{ display: activeTab === 'transliteration' ? 'block' : 'none' }}>
+              <TransliterationGenerator onGenerate={handleGenerate} />
+            </div>
           </div>
         </div>
       </section>
