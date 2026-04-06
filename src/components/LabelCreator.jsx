@@ -112,7 +112,7 @@ export default function LabelCreator({ result, isSharedView }) {
     <div className="fade-in animate-delay-200">
       <div className="text-center mb-6">
         <h2 className="title-lg mb-1" style={{ color: 'var(--secondary)' }}>
-          {isSharedView ? 'Este sería tu nombre en coreano, escucha su pronunciación' : 'Este sería tu nombre en coreano'}
+          {isSharedView ? 'Escucha su pronunciación:' : 'Este sería tu nombre en coreano'}
         </h2>
         {isSharedView ? (
           <a href="/" className="btn btn-primary" style={{ marginTop: '0.75rem', borderRadius: '2rem', fontSize: '0.9rem', padding: '0.6rem 1.5rem' }}>

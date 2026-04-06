@@ -85,7 +85,7 @@ export const shareAsImage = async (element, bg, title, text, shareUrl) => {
       try {
         await navigator.share({
           title: title,
-          text: `${text} \n\nDescubre el tuyo en: ${url}`,
+          text: text,
           files: [file],
           url: url
         });
