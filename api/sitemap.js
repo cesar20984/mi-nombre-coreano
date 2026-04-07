@@ -44,8 +44,12 @@ export default async function handler(req, res) {
     // 3. Dynamic routes from Database
     articles.forEach(art => {
       const lastMod = new Date(art.updated_at).toISOString().split('T')[0];
-      const slug = art.name.toLowerCase().replace(/\s+/g, '-');
-      const encodedName = encodeURIComponent(slug);
+      const rawSlug = art.name.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[''"`]/g, '')
+        .replace(/\s+/g, '-');
+      const encodedName = encodeURIComponent(rawSlug);
       xml += `
   <url>
     <loc>${baseUrl}/${art.type}/${encodedName}</loc>

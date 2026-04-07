@@ -7,6 +7,7 @@ import LabelCreator from '../components/LabelCreator';
 import SpeakButton from '../components/SpeakButton';
 import GeneratorExplanation from '../components/GeneratorExplanation';
 import SEO from '../components/SEO';
+import { normalizeSlug } from './SharedView';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('transliteration'); // 'transliteration' | 'birthdate' | 'classic'
@@ -166,7 +167,7 @@ export default function Home() {
                       <li>Significado cultural</li>
                     </ul>
                       <Link 
-                      to={`/${result.shareType}/${encodeURIComponent(result.inputName.toLowerCase())}${
+                      to={`/${result.shareType}/${encodeURIComponent(normalizeSlug(result.inputName))}${
                         result.shareData ? `?${new URLSearchParams({
                           ...(result.shareData.day && { d: result.shareData.day }),
                           ...(result.shareData.month && { m: result.shareData.month }),

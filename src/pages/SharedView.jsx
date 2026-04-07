@@ -78,7 +78,7 @@ function generateMeaning(name, day, month, year) {
 
 // ─── URL builder for share ───
 
-function normalizeSlug(str) {
+export function normalizeSlug(str) {
   return str
     .normalize('NFD')                   // decompose accents: é → e + ́
     .replace(/[\u0300-\u036f]/g, '')    // strip combining diacritical marks
@@ -213,7 +213,7 @@ export default function SharedView() {
 
                   if (foundType) {
                     const linkType = tagType || foundType;
-                    const slug = encodeURIComponent(tagName.toLowerCase());
+                    const slug = encodeURIComponent(normalizeSlug(tagName));
                     return `<a href="/${linkType}/${slug}" class="article-interlink">${displayName}</a>`;
                   }
                   return displayName;
