@@ -214,7 +214,7 @@ export default function SharedView() {
                   if (foundType) {
                     const linkType = tagType || foundType;
                     const slug = encodeURIComponent(tagName.toLowerCase());
-                    return `<a href="/nombre/${linkType}/${slug}" class="article-interlink">${displayName}</a>`;
+                    return `<a href="/${linkType}/${slug}" class="article-interlink">${displayName}</a>`;
                   }
                   return displayName;
                 });
