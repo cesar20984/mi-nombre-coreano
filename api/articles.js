@@ -89,9 +89,10 @@ export default async function handler(req, res) {
     }
 
     try {
+      const nameWithSpaces = name.replace(/-/g, ' ');
       const result = await sql`
         SELECT * FROM articles 
-        WHERE name = ${name.toLowerCase()} AND type = ${type}
+        WHERE (name = ${name.toLowerCase()} OR name = ${nameWithSpaces.toLowerCase()}) AND type = ${type}
       `;
 
       if (result.length > 0) {

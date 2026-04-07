@@ -23,7 +23,15 @@ export default async function handler(req, res) {
   </url>`;
 
     // Static important routes
-    const staticRoutes = ['/dictionary'];
+    const letters = Array.from({length: 26}, (_, i) => String.fromCharCode(97 + i));
+    const staticRoutes = [
+      '/significados',
+      '/diccionario',
+      ...letters.map(l => `/diccionario/${l}`),
+      '/mascotas',
+      '/tatuajes'
+    ];
+
     staticRoutes.forEach(route => {
       xml += `
   <url>
@@ -36,7 +44,8 @@ export default async function handler(req, res) {
     // 3. Dynamic routes from Database
     articles.forEach(art => {
       const lastMod = new Date(art.updated_at).toISOString().split('T')[0];
-      const encodedName = encodeURIComponent(art.name.toLowerCase());
+      const slug = art.name.toLowerCase().replace(/\s+/g, '-');
+      const encodedName = encodeURIComponent(slug);
       xml += `
   <url>
     <loc>${baseUrl}/${art.type}/${encodedName}</loc>
