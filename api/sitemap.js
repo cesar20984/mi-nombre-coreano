@@ -50,6 +50,7 @@ export default async function handler(req, res) {
 
     // 4. Send response as XML
     res.setHeader('Content-Type', 'text/xml');
+    res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate=59'); // Only cache for 1s at CDN
     res.write(xml);
     res.end();
   } catch (error) {
