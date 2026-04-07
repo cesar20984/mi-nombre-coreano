@@ -144,17 +144,19 @@ export default function Admin() {
   const handleSendWebhook = async (search) => {
     try {
       // 1. Send webhook
-      await fetch('https://n8n-n8n.b92vmw.easypanel.host/webhook/koriname-api', {
-        method: 'POST',
+      const res = await fetch('/api/searches', {
+        method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        mode: 'no-cors',
         body: JSON.stringify({
           name: search.name,
           type: search.type
         })
       });
+
+      if (!res.ok) throw new Error('Webhook error');
 
       // 2. Mark as processed automatically
       if (!search.processed) {

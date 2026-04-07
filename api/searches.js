@@ -95,5 +95,26 @@ export default async function handler(req, res) {
     }
   }
 
+  // PUT: Safely trigger webhook from backend to bypass CORS
+  if (req.method === 'PUT') {
+    try {
+      const { name, type } = req.body;
+      const n8nRes = await fetch('https://n8n-n8n.b92vmw.easypanel.host/webhook/koriname-api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, type })
+      });
+
+      if (!n8nRes.ok) {
+        throw new Error('N8N responded with error');
+      }
+
+      return res.status(200).json({ success: true });
+    } catch (e) {
+      console.error('Webhook error:', e);
+      return res.status(500).json({ error: 'Failed to hit webhook' });
+    }
+  }
+
   return res.status(405).json({ error: 'Method Not Allowed' });
 }
