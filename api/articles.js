@@ -30,6 +30,31 @@ export default async function handler(req, res) {
       }
     }
 
+    // Batch existence check: /api/articles?check=type1:name1,type2:name2
+    if (req.query.check) {
+      try {
+        const pairs = req.query.check.split(',').map(p => {
+          const [t, n] = p.split(':');
+          return { type: t, name: n?.toLowerCase() };
+        }).filter(p => p.type && p.name);
+        
+        if (pairs.length === 0) return res.status(200).json({});
+
+        // Build a single query checking all pairs
+        const result = await sql`
+          SELECT name, type FROM articles 
+          WHERE (name, type) IN (${sql(pairs.map(p => [p.name, p.type]))})
+        `;
+        
+        const existsMap = {};
+        result.forEach(r => { existsMap[`${r.type}:${r.name}`] = true; });
+        return res.status(200).json(existsMap);
+      } catch (error) {
+        console.error('Check error:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+
     if (!name || !type) {
       return res.status(400).json({ error: 'Missing name or type parameter' });
     }

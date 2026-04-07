@@ -170,7 +170,38 @@ export default function SharedView() {
         if (res.ok) {
           const data = await res.json();
           if (data && data.content) {
-            setArticleContent(data.content);
+            let html = data.content;
+
+            // Process [[type:name]] interlinking tags
+            const tagRegex = /\[\[([^:\]]+):([^\]]+)\]\]/g;
+            const tags = [];
+            let match;
+            while ((match = tagRegex.exec(html)) !== null) {
+              tags.push({ type: match[1], name: match[2].toLowerCase() });
+            }
+
+            if (tags.length > 0) {
+              // Batch check which articles exist
+              const checkParam = tags.map(t => `${t.type}:${t.name}`).join(',');
+              try {
+                const checkRes = await fetch(`/api/articles?check=${encodeURIComponent(checkParam)}`);
+                const existsMap = checkRes.ok ? await checkRes.json() : {};
+
+                html = html.replace(tagRegex, (fullMatch, tagType, tagName) => {
+                  const key = `${tagType}:${tagName.toLowerCase()}`;
+                  const displayName = tagName.charAt(0).toUpperCase() + tagName.slice(1);
+                  if (existsMap[key]) {
+                    return `<a href="/nombre/${tagType}/${tagName.toLowerCase()}" class="article-interlink">${displayName}</a>`;
+                  }
+                  return displayName;
+                });
+              } catch (e) {
+                // On error, just strip the brackets and show plain text
+                html = html.replace(tagRegex, (_, _t, n) => n.charAt(0).toUpperCase() + n.slice(1));
+              }
+            }
+
+            setArticleContent(html);
           }
         }
       } catch (err) {

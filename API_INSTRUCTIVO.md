@@ -66,4 +66,31 @@ Endpoint público (no requiere Token) usado por el frontend.
 
 ---
 
+## 🔗 Sistema de Interlinking: `[[tipo:nombre]]`
+
+Para crear enlaces internos entre artículos, usa la sintaxis de corchetes dobles dentro del contenido HTML:
+
+```
+[[my-name:cesar]]    → enlace a /nombre/my-name/cesar
+[[saju:eustaquia]]   → enlace a /nombre/saju/eustaquia
+[[meaning:ahyung]]   → enlace a /nombre/meaning/ahyung
+```
+
+### ¿Cómo funciona?
+1.  Al renderizar la página, el sistema detecta todas las etiquetas `[[tipo:nombre]]`.
+2.  Consulta la base de datos para verificar cuáles de esos nombres tienen artículo creado.
+3.  **Si el artículo existe**: Se convierte en un enlace elegante que lleva al usuario directamente a esa página.
+4.  **Si NO existe**: Se muestra solo el nombre como texto normal (sin enlace ni corchetes).
+
+### Ejemplo en el contenido:
+```html
+<p>Si te gusta este nombre, también podrías considerar [[my-name:sofia]] o [[meaning:minjun]].</p>
+```
+
+**Resultado visible para el lector** (asumiendo que "sofia" existe pero "minjun" no):
+> Si te gusta este nombre, también podrías considerar **Sofia** (enlace) o Minjun (texto normal).
+
+---
+
 *Desarrollado para Koriname.com*
+
