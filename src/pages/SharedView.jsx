@@ -172,32 +172,58 @@ export default function SharedView() {
           if (data && data.content) {
             let html = data.content;
 
-            // Process [[type:name]] interlinking tags
-            const tagRegex = /\[\[([^:\]]+):([^\]]+)\]\]/g;
-            const tags = [];
+            // Unified regex: matches [[type:name]] OR [[name]]
+            const tagRegex = /\[\[([^\]]+)\]\]/g;
+            const entries = [];
             let match;
             while ((match = tagRegex.exec(html)) !== null) {
-              tags.push({ type: match[1], name: match[2].toLowerCase() });
+              const inner = match[1];
+              const colonIdx = inner.indexOf(':');
+              if (colonIdx > -1) {
+                entries.push({ raw: inner, type: inner.substring(0, colonIdx), name: inner.substring(colonIdx + 1) });
+              } else {
+                entries.push({ raw: inner, type: null, name: inner });
+              }
             }
 
-            if (tags.length > 0) {
-              // Batch check which articles exist
-              const checkParam = tags.map(t => `${t.type}:${t.name}`).join(',');
+            if (entries.length > 0) {
+              // Build batch check param using pipe separator
+              const checkParam = entries.map(e => 
+                e.type ? `${e.type}:${e.name.toLowerCase()}` : e.name.toLowerCase()
+              ).join('|');
+
               try {
                 const checkRes = await fetch(`/api/articles?check=${encodeURIComponent(checkParam)}`);
                 const existsMap = checkRes.ok ? await checkRes.json() : {};
 
-                html = html.replace(tagRegex, (fullMatch, tagType, tagName) => {
-                  const key = `${tagType}:${tagName.toLowerCase()}`;
+                html = html.replace(tagRegex, (fullMatch, inner) => {
+                  const colonIdx = inner.indexOf(':');
+                  let tagType, tagName;
+                  if (colonIdx > -1) {
+                    tagType = inner.substring(0, colonIdx);
+                    tagName = inner.substring(colonIdx + 1);
+                  } else {
+                    tagType = null;
+                    tagName = inner;
+                  }
+
+                  const key = tagType ? `${tagType}:${tagName.toLowerCase()}` : tagName.toLowerCase();
                   const displayName = tagName.charAt(0).toUpperCase() + tagName.slice(1);
-                  if (existsMap[key]) {
-                    return `<a href="/nombre/${tagType}/${tagName.toLowerCase()}" class="article-interlink">${displayName}</a>`;
+                  const foundType = existsMap[key];
+
+                  if (foundType) {
+                    const linkType = tagType || foundType;
+                    const slug = encodeURIComponent(tagName.toLowerCase());
+                    return `<a href="/nombre/${linkType}/${slug}" class="article-interlink">${displayName}</a>`;
                   }
                   return displayName;
                 });
               } catch (e) {
-                // On error, just strip the brackets and show plain text
-                html = html.replace(tagRegex, (_, _t, n) => n.charAt(0).toUpperCase() + n.slice(1));
+                html = html.replace(tagRegex, (_, inner) => {
+                  const colonIdx = inner.indexOf(':');
+                  const n = colonIdx > -1 ? inner.substring(colonIdx + 1) : inner;
+                  return n.charAt(0).toUpperCase() + n.slice(1);
+                });
               }
             }
 

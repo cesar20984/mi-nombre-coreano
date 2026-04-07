@@ -66,29 +66,45 @@ Endpoint público (no requiere Token) usado por el frontend.
 
 ---
 
-## 🔗 Sistema de Interlinking: `[[tipo:nombre]]`
+## 🔗 Sistema de Interlinking: `[[nombre]]`
 
-Para crear enlaces internos entre artículos, usa la sintaxis de corchetes dobles dentro del contenido HTML:
+Para crear enlaces internos entre artículos, usa la sintaxis de corchetes dobles dentro del contenido HTML.
+
+### Formatos disponibles
 
 ```
-[[my-name:cesar]]    → enlace a /nombre/my-name/cesar
-[[saju:eustaquia]]   → enlace a /nombre/saju/eustaquia
-[[meaning:ahyung]]   → enlace a /nombre/meaning/ahyung
+[[cesar]]              → Busca "cesar" en CUALQUIER categoría (primera que encuentre)
+[[my-name:cesar]]      → Busca "cesar" SOLO en my-name
+[[saju:eustaquia]]     → Busca "eustaquia" SOLO en saju
+[[meaning:ahyung]]     → Busca "ahyung" SOLO en meaning
+```
+
+### Nombres con espacios
+
+Simplemente escríbelos natural dentro de los corchetes:
+```
+[[ji eun]]             → Busca "ji eun" en cualquier categoría
+[[meaning:ji eun]]     → Busca "ji eun" solo en meaning
+[[maría josé]]         → Funciona con espacios y acentos
 ```
 
 ### ¿Cómo funciona?
-1.  Al renderizar la página, el sistema detecta todas las etiquetas `[[tipo:nombre]]`.
-2.  Consulta la base de datos para verificar cuáles de esos nombres tienen artículo creado.
-3.  **Si el artículo existe**: Se convierte en un enlace elegante que lleva al usuario directamente a esa página.
+1.  Al renderizar la página, el sistema detecta todas las etiquetas `[[...]]`.
+2.  Consulta la base de datos verificando cuáles tienen artículo creado.
+3.  **Si el artículo existe**: Se convierte en un enlace elegante que lleva al usuario a esa página.
 4.  **Si NO existe**: Se muestra solo el nombre como texto normal (sin enlace ni corchetes).
 
 ### Ejemplo en el contenido:
 ```html
-<p>Si te gusta este nombre, también podrías considerar [[my-name:sofia]] o [[meaning:minjun]].</p>
+<p>Si te gusta este nombre, también te podría gustar [[sofia]], [[ji eun]] o [[meaning:minjun]].</p>
 ```
 
-**Resultado visible para el lector** (asumiendo que "sofia" existe pero "minjun" no):
-> Si te gusta este nombre, también podrías considerar **Sofia** (enlace) o Minjun (texto normal).
+**Resultado visible para el lector** (asumiendo que "sofia" existe pero los otros no):
+> Si te gusta este nombre, también te podría gustar **Sofia** (enlace) o Ji eun (texto) o Minjun (texto).
+
+### Recomendación
+*   Usa `[[nombre]]` (sin categoría) para automatización y comodidad.
+*   Usa `[[tipo:nombre]]` solo cuando necesites forzar un enlace a una categoría específica.
 
 ---
 

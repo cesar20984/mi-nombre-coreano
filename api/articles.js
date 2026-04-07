@@ -30,24 +30,51 @@ export default async function handler(req, res) {
       }
     }
 
-    // Batch existence check: /api/articles?check=type1:name1,type2:name2
+    // Batch existence check: /api/articles?check=type1:name1|name2|type2:name3
+    // Entries separated by |. With colon = specific category. Without = any category.
     if (req.query.check) {
       try {
-        const pairs = req.query.check.split(',').map(p => {
-          const [t, n] = p.split(':');
-          return { type: t, name: n?.toLowerCase() };
-        }).filter(p => p.type && p.name);
+        const entries = req.query.check.split('|').map(p => {
+          const colonIdx = p.indexOf(':');
+          if (colonIdx > -1) {
+            return { type: p.substring(0, colonIdx), name: p.substring(colonIdx + 1).toLowerCase(), key: p.toLowerCase() };
+          }
+          return { type: null, name: p.toLowerCase(), key: p.toLowerCase() };
+        }).filter(p => p.name);
         
-        if (pairs.length === 0) return res.status(200).json({});
+        if (entries.length === 0) return res.status(200).json({});
 
-        // Build a single query checking all pairs
+        // Get all unique names to check
+        const allNames = [...new Set(entries.map(e => e.name))];
+        
         const result = await sql`
           SELECT name, type FROM articles 
-          WHERE (name, type) IN (${sql(pairs.map(p => [p.name, p.type]))})
+          WHERE name IN (${sql(allNames)})
         `;
         
+        // Build lookup: name -> [types]
+        const dbLookup = {};
+        result.forEach(r => {
+          if (!dbLookup[r.name]) dbLookup[r.name] = [];
+          dbLookup[r.name].push(r.type);
+        });
+        
+        // Build response
         const existsMap = {};
-        result.forEach(r => { existsMap[`${r.type}:${r.name}`] = true; });
+        entries.forEach(e => {
+          if (e.type) {
+            // Specific category requested
+            if (dbLookup[e.name] && dbLookup[e.name].includes(e.type)) {
+              existsMap[e.key] = e.type;
+            }
+          } else {
+            // No category — return first match
+            if (dbLookup[e.name] && dbLookup[e.name].length > 0) {
+              existsMap[e.key] = dbLookup[e.name][0];
+            }
+          }
+        });
+        
         return res.status(200).json(existsMap);
       } catch (error) {
         console.error('Check error:', error);
