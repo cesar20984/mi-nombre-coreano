@@ -47,9 +47,10 @@ export default async function handler(req, res) {
         // Get all unique names to check
         const allNames = [...new Set(entries.map(e => e.name))];
         
+        // Build a query checking all names
         const result = await sql`
           SELECT name, type FROM articles 
-          WHERE name IN (${sql(allNames)})
+          WHERE name = ANY(${allNames})
         `;
         
         // Build lookup: name -> [types]
