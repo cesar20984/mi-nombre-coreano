@@ -121,7 +121,7 @@ export default function SharedView() {
   const location = useLocation();
   
   const type = getTypeFromPath(location.pathname);
-  const name = decodeURIComponent(rawName || '');
+  const name = decodeURIComponent(rawName || '').replace(/-/g, ' ');
 
   const result = useMemo(() => {
     if (!name) return null;
@@ -249,7 +249,7 @@ export default function SharedView() {
     );
   }
 
-  const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  const displayName = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   // Build proper SEO per type — each must be truly unique
   const seoByType = {
