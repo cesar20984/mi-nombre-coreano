@@ -55,8 +55,9 @@ export default async function handler(req, res) {
         // Build lookup: name -> [types]
         const dbLookup = {};
         result.forEach(r => {
-          if (!dbLookup[r.name]) dbLookup[r.name] = [];
-          dbLookup[r.name].push(r.type);
+          const lowerName = r.name.toLowerCase();
+          if (!dbLookup[lowerName]) dbLookup[lowerName] = [];
+          dbLookup[lowerName].push(r.type);
         });
         
         // Build response
