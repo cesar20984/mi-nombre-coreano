@@ -728,3 +728,40 @@ h1, h2, h3, h4, h5, h6 {
 .mb-8 { margin-bottom: 4rem; }
 .mt-4 { margin-top: 2rem; }
 .mt-8 { margin-top: 4rem; }
+.hangul-speaker-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'Noto Serif KR', serif;
+}
+
+.article-speak-btn {
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--primary);
+  margin-left: 0.1rem;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+}
+
+.article-speak-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.article-content h1, .article-content h2, .article-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content p {
+  margin-bottom: 1rem;
+}

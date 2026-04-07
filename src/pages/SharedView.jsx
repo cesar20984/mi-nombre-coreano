@@ -283,6 +283,58 @@ export default function SharedView() {
                 lineHeight: '1.8'
               }}
               dangerouslySetInnerHTML={{ __html: articleContent }}
+              ref={(el) => {
+                if (el) {
+                  // Find all Hangul text and inject speakers
+                  const koreanRegex = /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]+/g;
+                  
+                  // Simple logic: we process text nodes to avoid breaking HTML tags
+                  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+                  let node;
+                  const nodesToReplace = [];
+                  
+                  while(node = walker.nextNode()) {
+                    if (koreanRegex.test(node.nodeValue) && node.parentElement.tagName !== 'BUTTON' && !node.parentElement.classList.contains('article-speak-btn')) {
+                      nodesToReplace.push(node);
+                    }
+                  }
+
+                  nodesToReplace.forEach(textNode => {
+                    const parent = textNode.parentElement;
+                    const text = textNode.nodeValue;
+                    const parts = text.split(koreanRegex);
+                    const matches = text.match(koreanRegex);
+                    
+                    const fragment = document.createDocumentFragment();
+                    parts.forEach((part, i) => {
+                      fragment.appendChild(document.createTextNode(part));
+                      if (matches && matches[i]) {
+                        const span = document.createElement('span');
+                        span.className = 'hangul-speaker-wrapper';
+                        span.textContent = matches[i];
+                        
+                        const btn = document.createElement('button');
+                        btn.className = 'article-speak-btn';
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+                        btn.onclick = () => {
+                          window.speechSynthesis.cancel();
+                          const utterance = new SpeechSynthesisUtterance(matches[i]);
+                          utterance.lang = 'ko-KR';
+                          const voices = window.speechSynthesis.getVoices();
+                          const koreanVoice = voices.find(v => v.lang.includes('ko'));
+                          if (koreanVoice) utterance.voice = koreanVoice;
+                          utterance.rate = 0.85;
+                          window.speechSynthesis.speak(utterance);
+                        };
+                        
+                        span.appendChild(btn);
+                        fragment.appendChild(span);
+                      }
+                    });
+                    parent.replaceChild(fragment, textNode);
+                  });
+                }
+              }}
             />
           )}
 
