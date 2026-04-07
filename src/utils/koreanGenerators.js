@@ -62,6 +62,18 @@ const pPhoneticMap = {
   'za': 'sa', 'ze': 'se', 'zi': 'shi', 'zo': 'so', 'zu': 'su',
 };
 
+const phoneticMap3 = {
+  'que': '케', 'qui': '키', 'gue': '게', 'gui': '기',
+  'cha': '차', 'che': '체', 'chi': '치', 'cho': '초', 'chu': '추',
+  'lla': '야', 'lle': '예', 'lli': '지', 'llo': '요', 'llu': '유',
+};
+
+const pPhoneticMap3 = {
+  'que': 'ke', 'qui': 'ki', 'gue': 'ge', 'gui': 'gi',
+  'cha': 'cha', 'che': 'che', 'chi': 'chi', 'cho': 'cho', 'chu': 'chu',
+  'lla': 'ya', 'lle': 'ye', 'lli': 'ji', 'llo': 'yo', 'llu': 'yu',
+};
+
 export function transliterate(input) {
   let lower = input.toLowerCase().replace(/[^a-zñ]/g, '');
   let result = '';
@@ -69,6 +81,18 @@ export function transliterate(input) {
   
   let i = 0;
   while(i < lower.length) {
+    // Check 3 letters
+    if (i < lower.length - 2) {
+      let triple = lower.substring(i, i+3);
+      if (phoneticMap3[triple]) {
+        result += phoneticMap3[triple];
+        pronunciation += (pronunciation ? '-' : '') + pPhoneticMap3[triple];
+        i += 3;
+        continue;
+      }
+    }
+    
+    // Check 2 letters
     if (i < lower.length - 1) {
       let pair = lower.substring(i, i+2);
       if (phoneticMap[pair]) {
@@ -78,6 +102,8 @@ export function transliterate(input) {
         continue;
       }
     }
+    
+    // Fallback to 1 letter
     if (charMap[lower[i]]) {
       result += charMap[lower[i]];
       pronunciation += (pronunciation ? '-' : '') + pCharMap[lower[i]];
