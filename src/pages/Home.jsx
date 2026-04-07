@@ -50,6 +50,18 @@ export default function Home() {
 
   const handleGenerate = (data) => {
     setResult(data);
+    
+    // Log search asynchronously in the background
+    if (data && data.inputName && data.shareType) {
+      fetch('/api/searches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name: data.inputName, 
+          type: data.shareType 
+        })
+      }).catch(() => {}); // ignore failing logs securely
+    }
   };
 
   return (

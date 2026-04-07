@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Trash2, Edit, Plus, LogOut, FileText } from 'lucide-react';
+import { Trash2, Edit, Plus, LogOut, FileText, Search, Send, CheckCircle, XCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const SESSION_KEY = 'koriname_admin_session';
@@ -9,9 +9,10 @@ const SESSION_KEY = 'koriname_admin_session';
 export default function Admin() {
   const [token, setToken] = useState(null);
   const [passwordInput, setPasswordInput] = useState('');
-  const [view, setView] = useState('list'); // 'list' | 'editor'
+  const [view, setView] = useState('list'); // 'list' | 'editor' | 'searches'
   
   const [articles, setArticles] = useState([]);
+  const [searches, setSearches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -74,8 +75,9 @@ export default function Admin() {
 
   // 2. Fetching Data
   useEffect(() => {
-    if (token && view === 'list') {
-      fetchArticles();
+    if (token) {
+      if (view === 'list') fetchArticles();
+      else if (view === 'searches') fetchSearches();
     }
   }, [token, view]);
 
@@ -97,6 +99,71 @@ export default function Admin() {
       setError('Error de red.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSearches = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/searches', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSearches(data);
+      } else {
+        if (res.status === 401) handleLogout();
+        setError('Error al obtener búsquedas.');
+      }
+    } catch (err) {
+      setError('Error de red al obtener búsquedas.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleProcessed = async (id, currentStatus) => {
+    try {
+      const res = await fetch('/api/searches', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ id, processed: !currentStatus })
+      });
+      if (res.ok) {
+        setSearches(s => s.map(item => item.id === id ? { ...item, processed: !currentStatus } : item));
+      }
+    } catch (err) {
+      alert('Error al actualizar el estado.');
+    }
+  };
+
+  const handleSendWebhook = async (search) => {
+    try {
+      // 1. Send webhook
+      await fetch('https://n8n-n8n.b92vmw.easypanel.host/webhook/koriname-api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'no-cors',
+        body: JSON.stringify({
+          name: search.name,
+          type: search.type
+        })
+      });
+
+      // 2. Mark as processed automatically
+      if (!search.processed) {
+        await handleToggleProcessed(search.id, search.processed);
+      }
+      
+      alert('Webhook enviado exitosamente');
+    } catch (err) {
+      alert('Error enviando al webhook');
     }
   };
 
@@ -211,6 +278,25 @@ export default function Admin() {
             </button>
           </div>
 
+          {view !== 'editor' && (
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+              <button 
+                onClick={() => setView('list')} 
+                className={`btn ${view === 'list' ? 'btn-primary' : ''}`}
+                style={{ background: view === 'list' ? '' : 'var(--surface-container)' }}
+              >
+                Artículos
+              </button>
+              <button 
+                onClick={() => setView('searches')} 
+                className={`btn ${view === 'searches' ? 'btn-primary' : ''}`}
+                style={{ background: view === 'searches' ? '' : 'var(--surface-container)' }}
+              >
+                Búsquedas ({searches.filter(s => !s.processed).length} nuevas)
+              </button>
+            </div>
+          )}
+
           {error && (
             <div style={{ padding: '1rem', marginBottom: '2rem', background: '#ffebee', color: '#c62828', borderRadius: '8px' }}>
               {error}
@@ -262,6 +348,82 @@ export default function Admin() {
                             </button>
                             <button onClick={() => handleDelete(art.id)} className="btn" style={{ padding: '0.5rem', background: 'transparent' }}>
                               <Trash2 size={18} color="#e53935" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+          {view === 'searches' && (
+            <div className="card" style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 className="body-lg" style={{ fontWeight: 600 }}>Registro de Búsquedas</h2>
+                <button onClick={fetchSearches} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container-low)' }}>
+                  Actualizar Restableciendo Filtros
+                </button>
+              </div>
+
+              {loading ? (
+                <p>Cargando búsquedas...</p>
+              ) : searches.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--surface-container-lowest)', borderRadius: '1rem' }}>
+                   <Search size={48} style={{ opacity: 0.2, margin: '0 auto 1rem' }} />
+                   <p>No hay búsquedas registradas.</p>
+                </div>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid var(--outline-variant)' }}>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Nombre / Búsqueda</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)', textAlign: 'center' }}>Consultas</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Última vez</th>
+                        <th style={{ padding: '1rem', textAlign: 'right' }}>Webhook / Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {searches.map(s => (
+                        <tr key={s.id} style={{ borderBottom: '1px solid var(--outline-variant)', opacity: s.processed ? 0.6 : 1, background: s.processed ? 'var(--surface-container-lowest)' : 'transparent' }}>
+                          <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
+                            {s.name}
+                          </td>
+                          <td style={{ padding: '1rem' }}>
+                            <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
+                              {types.find(t => t.value === s.type)?.label || s.type}
+                            </span>
+                          </td>
+                          <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                            {s.count}
+                          </td>
+                          <td style={{ padding: '1rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>
+                            {new Date(s.updated_at).toLocaleString()}
+                          </td>
+                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <button 
+                              onClick={() => handleSendWebhook(s)} 
+                              className="btn btn-primary" 
+                              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
+                              title="Enviar al Webhook (N8N)"
+                            >
+                              <Send size={14} /> Enviar
+                            </button>
+                            
+                            <button 
+                              onClick={() => handleToggleProcessed(s.id, s.processed)} 
+                              className="btn" 
+                              style={{ 
+                                padding: '0.4rem 0.6rem', 
+                                background: 'transparent',
+                                color: s.processed ? 'var(--primary)' : 'var(--on-surface-variant)',
+                              }}
+                              title={s.processed ? "Marcar como pendiente" : "Marcar como procesado (ocultar relámpago)"}
+                            >
+                              {s.processed ? <CheckCircle size={20} /> : <XCircle size={20} />}
                             </button>
                           </td>
                         </tr>
