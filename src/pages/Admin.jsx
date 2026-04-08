@@ -20,6 +20,10 @@ export default function Admin() {
   // Editor states
   const [formData, setFormData] = useState({ name: '', type: 'my-name', content: '' });
 
+  // Manual Webhook form states
+  const [manualName, setManualName] = useState('');
+  const [manualType, setManualType] = useState('my-name');
+
   // Quill Modules (matching standard toolbar)
   const modules = {
     toolbar: [
@@ -274,6 +278,37 @@ export default function Admin() {
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
             <h1 className="display-sm">Dashboard</h1>
+            
+            {/* Manual Webhook Sender */}
+            <div className="card" style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', background: 'var(--surface-container-low)' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Envío Manual:</span>
+              <input 
+                type="text" 
+                placeholder="Nombre..." 
+                value={manualName} 
+                onChange={(e) => setManualName(e.target.value)}
+                style={{ padding: '0.4rem', borderRadius: '0.4rem', border: '1px solid var(--outline-variant)', fontSize: '0.85rem', width: '120px' }}
+              />
+              <select 
+                value={manualType} 
+                onChange={(e) => setManualType(e.target.value)}
+                style={{ padding: '0.4rem', borderRadius: '0.4rem', border: '1px solid var(--outline-variant)', fontSize: '0.85rem' }}
+              >
+                {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
+              <button 
+                onClick={() => {
+                  if(!manualName) return alert('Pon un nombre');
+                  handleSendWebhook({ name: manualName, type: manualType });
+                  setManualName('');
+                }}
+                className="btn btn-primary"
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+              >
+                <Send size={14} /> Enviar
+              </button>
+            </div>
+
             <button onClick={handleLogout} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container)', color: 'var(--on-surface-variant)' }}>
               <LogOut size={16} style={{ marginRight: '0.5rem' }}/> Salir
             </button>
@@ -350,7 +385,17 @@ export default function Admin() {
                           <td style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>
                             {new Date(art.updated_at).toLocaleDateString()}
                           </td>
-                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <a
+                              href={`/${art.type}/${art.name.replace(/\s+/g, '-')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn"
+                              style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                              title="Ver en la web"
+                            >
+                              <ExternalLink size={16} />
+                            </a>
                             <button onClick={() => openEditor(art)} className="btn" style={{ padding: '0.5rem', background: 'transparent' }}>
                               <Edit size={18} color="var(--primary)" />
                             </button>
@@ -423,7 +468,7 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
-                            {exists && (
+                            {exists ? (
                               <a
                                 href={`/${s.type}/${s.name.replace(/\s+/g, '-')}`}
                                 target="_blank"
@@ -434,6 +479,8 @@ export default function Admin() {
                               >
                                 <ExternalLink size={16} />
                               </a>
+                            ) : (
+                              <div style={{ width: '34px' }}></div>
                             )}
                             
                             <div 
@@ -531,7 +578,7 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
-                            {link.exists && (
+                            {link.exists ? (
                               <a
                                 href={`/${link.existingType}/${link.name.replace(/\s+/g, '-')}`}
                                 target="_blank"
@@ -542,6 +589,8 @@ export default function Admin() {
                               >
                                 <ExternalLink size={16} />
                               </a>
+                            ) : (
+                              <div style={{ width: '34px' }}></div>
                             )}
                             
                             <div 
