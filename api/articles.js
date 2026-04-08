@@ -44,21 +44,31 @@ export default async function handler(req, res) {
         
         if (entries.length === 0) return res.status(200).json({});
 
-        // Get all unique names to check
-        const allNames = [...new Set(entries.map(e => e.name))];
+        // Get all unique names to check, plus their space-version counterparts
+        const allNames = [];
+        entries.forEach(e => {
+          allNames.push(e.name);
+          allNames.push(e.name.replace(/-/g, ' '));
+        });
+        const uniqueNames = [...new Set(allNames)];
         
         // Build a query checking all names
         const result = await sql`
           SELECT name, type FROM articles 
-          WHERE name = ANY(${allNames})
+          WHERE name = ANY(${uniqueNames})
         `;
         
-        // Build lookup: name -> [types]
+        // Build lookup: name -> [types], including variations
         const dbLookup = {};
         result.forEach(r => {
           const lowerName = r.name.toLowerCase();
-          if (!dbLookup[lowerName]) dbLookup[lowerName] = [];
-          dbLookup[lowerName].push(r.type);
+          const spaceName = lowerName.replace(/-/g, ' ');
+          const hyphenName = lowerName.replace(/\s+/g, '-');
+          
+          [lowerName, spaceName, hyphenName].forEach(k => {
+            if (!dbLookup[k]) dbLookup[k] = [];
+            dbLookup[k].push(r.type);
+          });
         });
         
         // Build response

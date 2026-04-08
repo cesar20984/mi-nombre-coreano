@@ -121,10 +121,11 @@ export default function SharedView() {
   const location = useLocation();
   
   const type = getTypeFromPath(location.pathname);
-  const name = decodeURIComponent(rawName || '').replace(/-/g, ' ');
+  const rawUrlParam = decodeURIComponent(rawName || '');
+  const displayParamName = rawUrlParam.replace(/-/g, ' ');
 
   const result = useMemo(() => {
-    if (!name) return null;
+    if (!displayParamName) return null;
     const day = searchParams.get('d');
     const month = searchParams.get('m');
     const year = searchParams.get('y');
@@ -132,7 +133,7 @@ export default function SharedView() {
 
     switch (type) {
       case 'my-name':
-        return generateTransliteration(name);
+        return generateTransliteration(displayParamName);
       case 'saju':
         if (!day || !month || !year) {
           return {
@@ -143,7 +144,7 @@ export default function SharedView() {
             noActions: true
           };
         }
-        return generateSaju(name, day, month, year, gender);
+        return generateSaju(displayParamName, day, month, year, gender);
       case 'meaning':
         if (!day || !month || !year) {
           return {
@@ -154,19 +155,19 @@ export default function SharedView() {
             noActions: true
           };
         }
-        return generateMeaning(name, day, month, year);
+        return generateMeaning(displayParamName, day, month, year);
       default:
         return null;
     }
-  }, [type, name, searchParams]);
+  }, [type, displayParamName, searchParams]);
 
   const [articleContent, setArticleContent] = useState(null);
 
   useEffect(() => {
     async function fetchArticle() {
-      if (!name || !type) return;
+      if (!displayParamName || !type) return;
       try {
-        const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(name)}`);
+        const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(rawUrlParam)}`);
         if (res.ok) {
           const data = await res.json();
           if (data && data.content) {
@@ -235,7 +236,7 @@ export default function SharedView() {
       }
     }
     fetchArticle();
-  }, [name, type]);
+  }, [rawUrlParam, displayParamName, type]);
 
   if (!result) {
     return (
@@ -249,7 +250,7 @@ export default function SharedView() {
     );
   }
 
-  const displayName = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const displayName = displayParamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   // Build proper SEO per type — each must be truly unique
   const seoByType = {
