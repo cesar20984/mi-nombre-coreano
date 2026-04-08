@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     if (list === 'true') {
       if (!isAuth) return res.status(401).json({ error: 'Unauthorized' });
       try {
-        const result = await sql`SELECT id, name, title, type, created_at, updated_at FROM articles ORDER BY updated_at DESC`;
+        const result = await sql`SELECT * FROM articles ORDER BY updated_at DESC`;
         return res.status(200).json(result);
       } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -134,16 +134,30 @@ export default async function handler(req, res) {
 
     try {
       // Upsert: Create or Update if exists
-      const result = await sql`
-        INSERT INTO articles (name, title, type, content, updated_at)
-        VALUES (${slugName}, ${originalTitle}, ${type}, ${content}, CURRENT_TIMESTAMP)
-        ON CONFLICT (name, type)
-        DO UPDATE SET 
-          title = EXCLUDED.title,
-          content = EXCLUDED.content,
-          updated_at = CURRENT_TIMESTAMP
-        RETURNING *
-      `;
+      let result;
+      try {
+        result = await sql`
+          INSERT INTO articles (name, title, type, content, updated_at)
+          VALUES (${slugName}, ${originalTitle}, ${type}, ${content}, CURRENT_TIMESTAMP)
+          ON CONFLICT (name, type)
+          DO UPDATE SET 
+            title = EXCLUDED.title,
+            content = EXCLUDED.content,
+            updated_at = CURRENT_TIMESTAMP
+          RETURNING *
+        `;
+      } catch (dbError) {
+        console.error('Title column may be missing, falling back:', dbError.message);
+        result = await sql`
+          INSERT INTO articles (name, type, content, updated_at)
+          VALUES (${slugName}, ${type}, ${content}, CURRENT_TIMESTAMP)
+          ON CONFLICT (name, type)
+          DO UPDATE SET 
+            content = EXCLUDED.content,
+            updated_at = CURRENT_TIMESTAMP
+          RETURNING *
+        `;
+      }
       
       return res.status(200).json({ success: true, article: result[0] });
     } catch (error) {
