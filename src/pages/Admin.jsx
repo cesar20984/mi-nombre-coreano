@@ -426,7 +426,7 @@ export default function Admin() {
                             <div 
                               style={{ 
                                 padding: '0.4rem 0.6rem', 
-                                color: exists ? 'var(--primary)' : 'var(--on-surface-variant)',
+                                color: exists ? '#4CAF50' : '#9E9E9E',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
@@ -491,10 +491,35 @@ export default function Admin() {
                             {link.count}
                           </td>
                           <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <select
+                              id={`mention-type-${i}`}
+                              defaultValue={link.type || 'meaning'}
+                              style={{ 
+                                padding: '0.3rem', 
+                                borderRadius: '0.5rem', 
+                                background: 'var(--surface)', 
+                                border: '1px solid var(--outline-variant)',
+                                fontSize: '0.8rem'
+                              }}
+                            >
+                              {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                            </select>
+                            <button 
+                              onClick={() => {
+                                const type = document.getElementById(`mention-type-${i}`).value;
+                                handleSendWebhook({ name: link.name, type });
+                              }} 
+                              className="btn btn-primary" 
+                              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
+                              title="Enviar al Webhook (N8N)"
+                            >
+                              <Send size={14} /> Enviar
+                            </button>
+                            
                             <div 
                               style={{ 
                                 padding: '0.4rem 0.6rem', 
-                                color: link.exists ? 'var(--primary)' : 'var(--on-surface-variant)',
+                                color: link.exists ? '#4CAF50' : '#9E9E9E',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
