@@ -13,6 +13,7 @@ export default function Admin() {
   
   const [articles, setArticles] = useState([]);
   const [searches, setSearches] = useState([]);
+  const [interlinks, setInterlinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -123,21 +124,24 @@ export default function Admin() {
     }
   };
 
-  const handleToggleProcessed = async (id, currentStatus) => {
+  const fetchInterlinks = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const res = await fetch('/api/searches', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ id, processed: !currentStatus })
+      const res = await fetch('/api/interlinks', {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        setSearches(s => s.map(item => item.id === id ? { ...item, processed: !currentStatus } : item));
+        const data = await res.json();
+        setInterlinks(data);
+      } else {
+        if (res.status === 401) handleLogout();
+        setError('Error al obtener menciones.');
       }
     } catch (err) {
-      alert('Error al actualizar el estado.');
+      setError('Error de red al obtener menciones.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -157,11 +161,6 @@ export default function Admin() {
       });
 
       if (!res.ok) throw new Error('Webhook error');
-
-      // 2. Mark as processed automatically
-      if (!search.processed) {
-        await handleToggleProcessed(search.id, search.processed);
-      }
       
       alert('Webhook enviado exitosamente');
     } catch (err) {
@@ -294,7 +293,14 @@ export default function Admin() {
                 className={`btn ${view === 'searches' ? 'btn-primary' : ''}`}
                 style={{ background: view === 'searches' ? '' : 'var(--surface-container)' }}
               >
-                Búsquedas ({searches.filter(s => !s.processed).length} nuevas)
+                Búsquedas
+              </button>
+              <button 
+                onClick={() => { setView('interlinks'); fetchInterlinks(); }} 
+                className={`btn ${view === 'interlinks' ? 'btn-primary' : ''}`}
+                style={{ background: view === 'interlinks' ? '' : 'var(--surface-container)' }}
+              >
+                Menciones
               </button>
             </div>
           )}
@@ -389,8 +395,10 @@ export default function Admin() {
                       </tr>
                     </thead>
                     <tbody>
-                      {searches.map(s => (
-                        <tr key={s.id} style={{ borderBottom: '1px solid var(--outline-variant)', opacity: s.processed ? 0.6 : 1, background: s.processed ? 'var(--surface-container-lowest)' : 'transparent' }}>
+                      {searches.map(s => {
+                        const exists = articles.some(a => a.name.toLowerCase() === s.name.replace(/-/g, ' ').toLowerCase() && a.type === s.type);
+                        return (
+                        <tr key={s.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
                           <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
                             {s.name}
                           </td>
@@ -415,18 +423,86 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
-                            <button 
-                              onClick={() => handleToggleProcessed(s.id, s.processed)} 
-                              className="btn" 
+                            <div 
                               style={{ 
                                 padding: '0.4rem 0.6rem', 
-                                background: 'transparent',
-                                color: s.processed ? 'var(--primary)' : 'var(--on-surface-variant)',
+                                color: exists ? 'var(--primary)' : 'var(--on-surface-variant)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                               }}
-                              title={s.processed ? "Marcar como pendiente" : "Marcar como procesado (ocultar relámpago)"}
+                              title={exists ? "Artículo ya existe" : "Artículo no existe"}
                             >
-                              {s.processed ? <CheckCircle size={20} /> : <XCircle size={20} />}
-                            </button>
+                              {exists ? <CheckCircle size={20} /> : <XCircle size={20} />}
+                            </div>
+                          </td>
+                        </tr>
+                      )})}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {view === 'interlinks' && (
+            <div className="card" style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 className="body-lg" style={{ fontWeight: 600 }}>Menciones en Artículos</h2>
+                <button onClick={fetchInterlinks} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container-low)' }}>
+                  Actualizar Lista
+                </button>
+              </div>
+
+              {loading ? (
+                <p>Analizando menciones...</p>
+              ) : interlinks.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--surface-container-lowest)', borderRadius: '1rem' }}>
+                   <FileText size={48} style={{ opacity: 0.2, margin: '0 auto 1rem' }} />
+                   <p>No se encontraron menciones.</p>
+                </div>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid var(--outline-variant)' }}>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Nombre Interlink</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría Forzada</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)', textAlign: 'center' }}>Total Menciones</th>
+                        <th style={{ padding: '1rem', textAlign: 'right' }}>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {interlinks.map((link, i) => (
+                        <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                          <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
+                            {link.name}
+                          </td>
+                          <td style={{ padding: '1rem' }}>
+                            {link.type ? (
+                              <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
+                                {types.find(t => t.value === link.type)?.label || link.type}
+                              </span>
+                            ) : (
+                              <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>Cualquiera</span>
+                            )}
+                          </td>
+                          <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                            {link.count}
+                          </td>
+                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <div 
+                              style={{ 
+                                padding: '0.4rem 0.6rem', 
+                                color: link.exists ? 'var(--primary)' : 'var(--on-surface-variant)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                              title={link.exists ? "Artículo ya existe" : "Artículo no existe"}
+                            >
+                              {link.exists ? <CheckCircle size={20} /> : <XCircle size={20} />}
+                            </div>
                           </td>
                         </tr>
                       ))}
