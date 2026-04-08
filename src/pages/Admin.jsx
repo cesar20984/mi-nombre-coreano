@@ -241,7 +241,7 @@ export default function Admin() {
       const res = await fetch(`/api/articles?name=${name}&type=${type}`);
       if (res.ok) {
         const data = await res.json();
-        setFormData({ name: data.name, type: data.type, content: data.content || '' });
+        setFormData({ name: data.title || data.name, type: data.type, content: data.content || '' });
         setView('editor');
       } else {
         alert('No se pudo cargar el artículo completo.');
@@ -383,9 +383,16 @@ export default function Admin() {
                       </tr>
                     </thead>
                     <tbody>
-                      {articles.map(art => (
+                        {articles.map(art => (
                         <tr key={art.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
-                          <td style={{ padding: '1rem', fontWeight: 500 }}>{art.name}</td>
+                          <td style={{ padding: '1rem', fontWeight: 500 }}>
+                            {art.title || art.name}
+                            {art.title && art.title.toLowerCase() !== art.name && (
+                              <div style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--on-surface-variant)' }}>
+                                URL: {art.name}
+                              </div>
+                            )}
+                          </td>
                           <td style={{ padding: '1rem' }}>
                             <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
                               {types.find(t => t.value === art.type)?.label || art.type}

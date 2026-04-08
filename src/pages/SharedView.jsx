@@ -162,6 +162,7 @@ export default function SharedView() {
   }, [type, displayParamName, searchParams]);
 
   const [articleContent, setArticleContent] = useState(null);
+  const [dbTitle, setDbTitle] = useState(null);
 
   useEffect(() => {
     async function fetchArticle() {
@@ -171,8 +172,11 @@ export default function SharedView() {
         const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(cleanSlug)}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.content) {
-            let html = data.content;
+            if (data && data.title) {
+              setDbTitle(data.title);
+            }
+            if (data && data.content) {
+              let html = data.content;
 
             // Unified regex: matches [[type:name]] OR [[name]]
             const tagRegex = /\[\[([^\]]+)\]\]/g;
@@ -251,7 +255,7 @@ export default function SharedView() {
     );
   }
 
-  const displayName = displayParamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const displayName = dbTitle || displayParamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   // Build proper SEO per type — each must be truly unique
   const seoByType = {

@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     if (list === 'true') {
       if (!isAuth) return res.status(401).json({ error: 'Unauthorized' });
       try {
-        const result = await sql`SELECT id, name, type, created_at, updated_at FROM articles ORDER BY updated_at DESC`;
+        const result = await sql`SELECT id, name, title, type, created_at, updated_at FROM articles ORDER BY updated_at DESC`;
         return res.status(200).json(result);
       } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -127,16 +127,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing name, type, or content' });
     }
 
-    // Normalize: lowercase and remove accents
-    const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    // Title is the original name with accents/cases
+    const originalTitle = name;
+    // Normalize: lowercase and remove accents for the slug URL
+    const slugName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     try {
       // Upsert: Create or Update if exists
       const result = await sql`
-        INSERT INTO articles (name, type, content, updated_at)
-        VALUES (${normalizedName}, ${type}, ${content}, CURRENT_TIMESTAMP)
+        INSERT INTO articles (name, title, type, content, updated_at)
+        VALUES (${slugName}, ${originalTitle}, ${type}, ${content}, CURRENT_TIMESTAMP)
         ON CONFLICT (name, type)
         DO UPDATE SET 
+          title = EXCLUDED.title,
           content = EXCLUDED.content,
           updated_at = CURRENT_TIMESTAMP
         RETURNING *
