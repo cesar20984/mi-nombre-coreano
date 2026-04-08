@@ -298,12 +298,12 @@ export default function Admin() {
                 setManualStatus('Enviando...');
                 const res = await handleSendWebhook({ name: cleanName(manualName), type: manualType });
                 if (res.success) {
-                  setManualStatus('✅ Enviado');
+                  setManualStatus('OK');
                   setManualName('');
-                  setTimeout(() => setManualStatus(''), 3000);
+                  setTimeout(() => setManualStatus(''), 1000);
                 } else {
-                  setManualStatus('❌ Error');
-                  setTimeout(() => setManualStatus(''), 3000);
+                  setManualStatus('');
+                  alert('Error enviando al webhook');
                 }
               }}
               className="card" 
@@ -326,16 +326,18 @@ export default function Admin() {
               </select>
               <button 
                 type="submit"
+                disabled={manualStatus === 'Enviando...'}
                 className="btn btn-primary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                style={{ 
+                  padding: '0.4rem 0.8rem', 
+                  fontSize: '0.85rem',
+                  minWidth: '85px',
+                  background: manualStatus === 'OK' ? '#4CAF50' : manualStatus === 'Enviando...' ? 'var(--outline-variant)' : '',
+                  borderColor: manualStatus === 'OK' ? '#4CAF50' : ''
+                }}
               >
-                <Send size={14} /> Enviar
+                {manualStatus === 'OK' ? '¡Listo!' : manualStatus === 'Enviando...' ? '...' : <><Send size={14} /> Enviar</>}
               </button>
-              {manualStatus && (
-                <span style={{ fontSize: '0.8rem', fontWeight: '500', color: manualStatus.includes('✅') ? '#4CAF50' : manualStatus.includes('❌') ? '#e53935' : 'var(--on-surface-variant)' }}>
-                  {manualStatus}
-                </span>
-              )}
             </form>
 
             <button onClick={handleLogout} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container)', color: 'var(--on-surface-variant)' }}>
