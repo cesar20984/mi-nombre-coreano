@@ -27,6 +27,7 @@ export default function Admin() {
   // Manual Webhook form states
   const [manualName, setManualName] = useState('');
   const [manualType, setManualType] = useState('my-name');
+  const [manualStatus, setManualStatus] = useState('');
 
   // Quill Modules (matching standard toolbar)
   const modules = {
@@ -170,9 +171,10 @@ export default function Admin() {
 
       if (!res.ok) throw new Error('Webhook error');
       
-      alert('Webhook enviado exitosamente');
+      return { success: true };
     } catch (err) {
-      alert('Error enviando al webhook');
+      console.error(err);
+      return { success: false };
     }
   };
 
@@ -289,7 +291,24 @@ export default function Admin() {
             <h1 className="display-sm">Dashboard</h1>
             
             {/* Manual Webhook Sender */}
-            <div className="card" style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', background: 'var(--surface-container-low)' }}>
+            <form 
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if(!manualName) return;
+                setManualStatus('Enviando...');
+                const res = await handleSendWebhook({ name: cleanName(manualName), type: manualType });
+                if (res.success) {
+                  setManualStatus('✅ Enviado');
+                  setManualName('');
+                  setTimeout(() => setManualStatus(''), 3000);
+                } else {
+                  setManualStatus('❌ Error');
+                  setTimeout(() => setManualStatus(''), 3000);
+                }
+              }}
+              className="card" 
+              style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', background: 'var(--surface-container-low)' }}
+            >
               <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Envío Manual:</span>
               <input 
                 type="text" 
@@ -306,17 +325,18 @@ export default function Admin() {
                 {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
               <button 
-                onClick={() => {
-                  if(!manualName) return alert('Pon un nombre');
-                  handleSendWebhook({ name: cleanName(manualName), type: manualType });
-                  setManualName('');
-                }}
+                type="submit"
                 className="btn btn-primary"
                 style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
               >
                 <Send size={14} /> Enviar
               </button>
-            </div>
+              {manualStatus && (
+                <span style={{ fontSize: '0.8rem', fontWeight: '500', color: manualStatus.includes('✅') ? '#4CAF50' : manualStatus.includes('❌') ? '#e53935' : 'var(--on-surface-variant)' }}>
+                  {manualStatus}
+                </span>
+              )}
+            </form>
 
             <button onClick={handleLogout} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container)', color: 'var(--on-surface-variant)' }}>
               <LogOut size={16} style={{ marginRight: '0.5rem' }}/> Salir
