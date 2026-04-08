@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Trash2, Edit, Plus, LogOut, FileText, Search, Send, CheckCircle, XCircle } from 'lucide-react';
+import { Trash2, Edit, Plus, LogOut, FileText, Search, Send, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const SESSION_KEY = 'koriname_admin_session';
@@ -423,17 +423,32 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
+                            {exists && (
+                              <a
+                                href={`/${s.type}/${s.name.replace(/\s+/g, '-')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn"
+                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                title="Ver en la web"
+                              >
+                                <ExternalLink size={16} />
+                              </a>
+                            )}
+                            
                             <div 
                               style={{ 
-                                padding: '0.4rem 0.6rem', 
-                                color: exists ? '#4CAF50' : '#9E9E9E',
+                                padding: '0.4rem 0.8rem',
+                                borderRadius: '0.5rem',
+                                background: exists ? '#4CAF50' : 'var(--surface-container-highest)', 
+                                color: exists ? '#FFFFFF' : '#9E9E9E',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                               }}
                               title={exists ? "Artículo ya existe" : "Artículo no existe"}
                             >
-                              {exists ? <CheckCircle size={20} /> : <XCircle size={20} />}
+                              {exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
                             </div>
                           </td>
                         </tr>
@@ -467,7 +482,7 @@ export default function Admin() {
                     <thead>
                       <tr style={{ borderBottom: '2px solid var(--outline-variant)' }}>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Nombre Interlink</th>
-                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría Forzada</th>
+                        <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría Registrada</th>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)', textAlign: 'center' }}>Total Menciones</th>
                         <th style={{ padding: '1rem', textAlign: 'right' }}>Estado</th>
                       </tr>
@@ -479,12 +494,12 @@ export default function Admin() {
                             {link.name}
                           </td>
                           <td style={{ padding: '1rem' }}>
-                            {link.type ? (
-                              <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
-                                {types.find(t => t.value === link.type)?.label || link.type}
+                            {link.existingType ? (
+                              <span className="badge" style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', background: 'var(--surface-container-high)', border: '1px solid var(--outline-variant)' }}>
+                                {types.find(t => t.value === link.existingType)?.label || link.existingType}
                               </span>
                             ) : (
-                              <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>Cualquiera</span>
+                              <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>—</span>
                             )}
                           </td>
                           <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
@@ -516,17 +531,32 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
+                            {link.exists && (
+                              <a
+                                href={`/${link.existingType}/${link.name.replace(/\s+/g, '-')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn"
+                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                title="Ver en la web"
+                              >
+                                <ExternalLink size={16} />
+                              </a>
+                            )}
+                            
                             <div 
                               style={{ 
-                                padding: '0.4rem 0.6rem', 
-                                color: link.exists ? '#4CAF50' : '#9E9E9E',
+                                padding: '0.4rem 0.8rem',
+                                borderRadius: '0.5rem',
+                                background: link.exists ? '#4CAF50' : 'var(--surface-container-highest)', 
+                                color: link.exists ? '#FFFFFF' : '#9E9E9E',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                               }}
                               title={link.exists ? "Artículo ya existe" : "Artículo no existe"}
                             >
-                              {link.exists ? <CheckCircle size={20} /> : <XCircle size={20} />}
+                              {link.exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
                             </div>
                           </td>
                         </tr>

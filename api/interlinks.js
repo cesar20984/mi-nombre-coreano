@@ -78,25 +78,19 @@ export default async function handler(req, res) {
 
       // Convert to array and format existing status
       const responseList = Object.values(mentionsCounts).map(item => {
-        // Find if it exists in DB
-        // If type is specified, check type. Otherwise, just check if ANY article has this name.
-        let exists = false;
+        const spaceName = item.name.replace(/-/g, ' ').toLowerCase();
+        const hyphenName = item.name.replace(/\s+/g, '-').toLowerCase();
         
-        // Try precise matches (hyphenated vs space)
-        const spaceName = item.name.replace(/-/g, ' ');
-        const hyphenName = item.name.replace(/\s+/g, '-');
-        
-        const possibleKeys = [
-          item.type ? `${item.type}:${item.name}` : `null:${item.name}`,
-          item.type ? `${item.type}:${spaceName}` : `null:${spaceName}`,
-          item.type ? `${item.type}:${hyphenName}` : `null:${hyphenName}`,
-        ];
-
-        exists = possibleKeys.some(k => existingDB.has(k));
+        // Find existing match in articles
+        const match = articles.find(a => {
+          const aName = a.name.toLowerCase();
+          return aName === spaceName || aName === hyphenName || aName === item.name.toLowerCase();
+        });
 
         return {
           ...item,
-          exists
+          exists: !!match,
+          existingType: match ? match.type : null
         };
       });
 
