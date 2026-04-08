@@ -28,6 +28,9 @@ export default function Admin() {
   const [manualName, setManualName] = useState('');
   const [manualType, setManualType] = useState('my-name');
   const [manualStatus, setManualStatus] = useState('');
+  const [bulkMode, setBulkMode] = useState(false);
+  const [bulkNames, setBulkNames] = useState('');
+  const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 });
 
   // Quill Modules (matching standard toolbar)
   const modules = {
@@ -176,6 +179,32 @@ export default function Admin() {
       console.error(err);
       return { success: false };
     }
+  };
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const handleBulkSend = async () => {
+    const list = bulkNames.split('\n').map(n => n.trim()).filter(n => n);
+    if (list.length === 0) return alert('La lista está vacía');
+    
+    if (!window.confirm(`¿Enviar ${list.length} nombres al webhook?`)) return;
+
+    setLoading(true);
+    setBulkProgress({ current: 0, total: list.length });
+    
+    for (let i = 0; i < list.length; i++) {
+      setBulkProgress(prev => ({ ...prev, current: i + 1 }));
+      await handleSendWebhook({ name: cleanName(list[i]), type: manualType });
+      if (i < list.length - 1) {
+        await sleep(1000); // 1 second delay
+      }
+    }
+
+    setLoading(false);
+    setBulkProgress({ current: 0, total: 0 });
+    setBulkNames('');
+    setBulkMode(false);
+    alert('Envío masivo completado');
   };
 
   // 3. Actions
@@ -338,12 +367,47 @@ export default function Admin() {
               >
                 {manualStatus === 'OK' ? '¡Listo!' : manualStatus === 'Enviando...' ? '...' : <><Send size={14} /> Enviar</>}
               </button>
+              <button 
+                type="button"
+                onClick={() => setBulkMode(!bulkMode)}
+                className="btn"
+                style={{ padding: '0.4rem', background: 'transparent', color: 'var(--primary)' }}
+                title="Envío Masivo"
+              >
+                <Plus size={20} style={{ transform: bulkMode ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }} />
+              </button>
             </form>
 
             <button onClick={handleLogout} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container)', color: 'var(--on-surface-variant)' }}>
               <LogOut size={16} style={{ marginRight: '0.5rem' }}/> Salir
             </button>
           </div>
+
+          {bulkMode && (
+            <div className="card" style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--surface-container-low)' }}>
+              <h3 className="body-md mb-2" style={{ fontWeight: 600 }}>Envío Masivo (Webhook)</h3>
+              <p className="body-sm mb-3" style={{ color: 'var(--on-surface-variant)' }}>Escribe un nombre por línea. Se enviarán con la categoría seleccionada arriba con 1s de retraso.</p>
+              <textarea
+                value={bulkNames}
+                onChange={(e) => setBulkNames(e.target.value)}
+                placeholder="Juan&#10;María&#10;Pedro..."
+                rows="6"
+                style={{ width: '100%', padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid var(--outline-variant)', marginBottom: '1rem', fontFamily: 'monospace' }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+                  {bulkProgress.total > 0 && `Progreso: ${bulkProgress.current} / ${bulkProgress.total}`}
+                </div>
+                <button 
+                  disabled={loading || !bulkNames.trim()}
+                  onClick={handleBulkSend}
+                  className="btn btn-primary"
+                >
+                  {loading ? 'Procesando...' : 'Iniciar Envío Masivo'}
+                </button>
+              </div>
+            </div>
+          )}
 
           {view !== 'editor' && (
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
