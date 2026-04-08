@@ -57,7 +57,10 @@ export default async function handler(req, res) {
             mentionName = inner.substring(colonIdx + 1);
           }
           
-          const rawSlug = mentionName.trim().toLowerCase();
+          const rawSlug = mentionName.trim()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase();
 
           // Reject names with 2 or more hyphens (usually transliteration artifacts)
           if ((rawSlug.match(/-/g) || []).length >= 2) continue;

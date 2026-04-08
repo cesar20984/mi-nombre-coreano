@@ -127,11 +127,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing name, type, or content' });
     }
 
+    // Normalize: lowercase and remove accents
+    const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
     try {
       // Upsert: Create or Update if exists
       const result = await sql`
         INSERT INTO articles (name, type, content, updated_at)
-        VALUES (${name.toLowerCase()}, ${type}, ${content}, CURRENT_TIMESTAMP)
+        VALUES (${normalizedName}, ${type}, ${content}, CURRENT_TIMESTAMP)
         ON CONFLICT (name, type)
         DO UPDATE SET 
           content = EXCLUDED.content,

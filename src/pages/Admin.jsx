@@ -6,6 +6,10 @@ import SEO from '../components/SEO';
 
 const SESSION_KEY = 'koriname_admin_session';
 
+const cleanName = (str) => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
+
 export default function Admin() {
   const [token, setToken] = useState(null);
   const [passwordInput, setPasswordInput] = useState('');
@@ -195,13 +199,18 @@ export default function Admin() {
     setLoading(true);
     setError('');
     try {
+      const normalizedData = { 
+        ...formData, 
+        name: cleanName(formData.name) 
+      };
+
       const res = await fetch('/api/articles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(normalizedData)
       });
       const data = await res.json();
       if (res.ok) {
@@ -299,7 +308,7 @@ export default function Admin() {
               <button 
                 onClick={() => {
                   if(!manualName) return alert('Pon un nombre');
-                  handleSendWebhook({ name: manualName, type: manualType });
+                  handleSendWebhook({ name: cleanName(manualName), type: manualType });
                   setManualName('');
                 }}
                 className="btn btn-primary"

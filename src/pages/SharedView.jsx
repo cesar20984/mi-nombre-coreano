@@ -167,7 +167,8 @@ export default function SharedView() {
     async function fetchArticle() {
       if (!displayParamName || !type) return;
       try {
-        const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(rawUrlParam)}`);
+        const cleanSlug = rawUrlParam.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const res = await fetch(`/api/articles?type=${type}&name=${encodeURIComponent(cleanSlug)}`);
         if (res.ok) {
           const data = await res.json();
           if (data && data.content) {
