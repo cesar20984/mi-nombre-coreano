@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import BirthdateGenerator from '../components/BirthdateGenerator';
 import TransliterationGenerator from '../components/TransliterationGenerator';
 import ClassicBirthdateGenerator from '../components/ClassicBirthdateGenerator';
@@ -170,28 +171,54 @@ export default function Home() {
               <LabelCreator result={result} />
               
               {hasArticle && (
-                <div className="fade-in animate-delay-300" style={{ marginTop: '2rem', textAlign: 'center' }}>
-                  <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--outline-variant)', display: 'inline-block', maxWidth: '400px', width: '100%' }}>
-                    <h4 className="body-md mb-2" style={{ fontWeight: 'bold' }}>Más sobre este nombre:</h4>
-                    <ul style={{ textAlign: 'left', margin: '0 auto 1.5rem auto', paddingLeft: '1.5rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                      <li>Cómo se usaría en Corea</li>
-                      <li>Alternativas coreanas reales</li>
-                      <li>Significado cultural</li>
+                <div className="fade-in animate-delay-300" style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+                  <div style={{ backgroundColor: 'var(--surface-container-low)', padding: '2rem', borderRadius: '1.5rem', border: '1px solid var(--outline-variant)', display: 'inline-block', maxWidth: '450px', width: '100%', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                    
+                    {(() => {
+                      const TYPE_PATHS = {
+                        'my-name': 'nombre-en-coreano',
+                        'saju': 'saju',
+                        'meaning': 'significado-nombre-coreano'
+                      };
+                      const path = TYPE_PATHS[result.shareType] || result.shareType;
+                      const slug = encodeURIComponent(normalizeSlug(result.inputName));
+                      const query = result.shareData ? `?${new URLSearchParams({
+                            ...(result.shareData.day && { d: result.shareData.day }),
+                            ...(result.shareData.month && { m: result.shareData.month }),
+                            ...(result.shareData.year && { y: result.shareData.year }),
+                            ...(result.shareData.gender && { g: result.shareData.gender })
+                          }).toString()}` : '';
+                      
+                      return (
+                        <Link 
+                          to={`/${path}/${slug}${query}`}
+                          className="btn btn-primary"
+                          style={{ 
+                            width: '100%', 
+                            fontSize: '1.1rem', 
+                            padding: '1rem', 
+                            marginBottom: '1.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.8rem',
+                            borderRadius: '30px',
+                            boxShadow: '0 8px 15px rgba(var(--primary-rgb), 0.2)'
+                          }}
+                        >
+                          Ver explicación completa <ArrowRight size={20} />
+                        </Link>
+                      );
+                    })()}
+
+                    <h4 className="body-md mb-2" style={{ fontWeight: 'bold', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                       <span style={{ color: 'var(--secondary)' }}>✨</span> ¿Qué incluye el artículo?
+                    </h4>
+                    <ul style={{ textAlign: 'left', margin: '0 auto', paddingLeft: '1.5rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem', lineHeight: '1.8' }}>
+                      <li>Cómo se usaría este nombre en Corea</li>
+                      <li>Alternativas coreanas reales y apodos</li>
+                      <li>Significado cultural y origen</li>
                     </ul>
-                      <Link 
-                      to={`/${result.shareType}/${encodeURIComponent(normalizeSlug(result.inputName))}${
-                        result.shareData ? `?${new URLSearchParams({
-                          ...(result.shareData.day && { d: result.shareData.day }),
-                          ...(result.shareData.month && { m: result.shareData.month }),
-                          ...(result.shareData.year && { y: result.shareData.year }),
-                          ...(result.shareData.gender && { g: result.shareData.gender })
-                        }).toString()}` : ''
-                      }`}
-                      className="btn btn-primary"
-                      style={{ width: '100%', fontSize: '0.95rem' }}
-                    >
-                      Ver explicación completa
-                    </Link>
                   </div>
                 </div>
               )}
