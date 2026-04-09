@@ -136,23 +136,25 @@ export default function SharedView() {
         return generateTransliteration(displayParamName);
       case 'saju':
         if (!day || !month || !year) {
-          const trans = generateTransliteration(displayParamName);
+          const fn = displayParamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
           return {
-            ...trans,
+            korean: '',
+            romanized: fn,
             meaning: null,
-            explanation: 'Introduce tu fecha de nacimiento para ver tu nombre personalizado según Saju.',
-            noActions: false
+            explanation: null,
+            noActions: true
           };
         }
         return generateSaju(displayParamName, day, month, year, gender);
       case 'meaning':
         if (!day || !month || !year) {
-          const trans = generateTransliteration(displayParamName);
+          const fn = displayParamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
           return {
-            ...trans,
-            meaning: 'Consulta el significado detallado en el artículo de abajo.',
-            explanation: 'Este es el nombre coreano consultado. Introduce tu fecha de nacimiento si quieres generar un nombre dinámico.',
-            noActions: false
+            korean: '',
+            romanized: fn,
+            meaning: null,
+            explanation: null,
+            noActions: true
           };
         }
         return generateMeaning(displayParamName, day, month, year);
