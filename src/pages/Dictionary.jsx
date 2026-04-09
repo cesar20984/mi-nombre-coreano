@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { Search } from 'lucide-react';
+import { Search, ExternalLink } from 'lucide-react';
 import SpeakButton from '../components/SpeakButton';
 import { fullDictionary } from '../data/dictionaryData';
 
@@ -11,22 +11,96 @@ export default function Dictionary() {
   const activeLetter = letter ? letter.toLowerCase() : 'a';
   
   const [searchTerm, setSearchTerm] = useState('');
+  const [dbNames, setDbNames] = useState([]);
+  const [genderFilter, setGenderFilter] = useState('all'); // all, f, m
   
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  // Logic: First filter by search term if exists. Otherwise, filter by active letter.
+  useEffect(() => {
+    fetch('/api/articles?dictionary=true')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setDbNames(data);
+      })
+      .catch(console.error);
+  }, []);
+
+  const getGender = (name) => {
+    const f = ['a', 'yeon', 'young', 'hee', 'eun', 'in', 'rin', 'ji', 'mi', 'ra', 'na', 'ah'];
+    const m = ['jun', 'ho', 'hyuk', 'seok', 'min', 'woo', 'hyun', 'gyu', 'soo', 'bin', 'ha', 'jae'];
+    const nameL = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    for (let suf of f) if (nameL.endsWith(suf)) return 'f';
+    for (let suf of m) if (nameL.endsWith(suf)) return 'm';
+    return 'u';
+  };
+
+  const combinedDictionary = useMemo(() => {
+    const dict = fullDictionary.map(d => ({ ...d, gender: d.gender || getGender(d.roman) }));
+    const dictNames = new Set(dict.map(d => d.roman.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase()));
+    
+    dbNames.forEach(dbn => {
+      const dbRomanPure = dbn.title.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase();
+      if (!dictNames.has(dbRomanPure)) {
+        dict.push({
+          hangul: dbn.title,
+          roman: dbn.title,
+          meaning: 'Significado detallado disponible en el artículo completo.',
+          style: 'light',
+          isArticle: true,
+          slug: dbn.name,
+          gender: getGender(dbn.title)
+        });
+        dictNames.add(dbRomanPure);
+      } else {
+        const existing = dict.find(d => d.roman.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase() === dbRomanPure);
+        if (existing) {
+          existing.isArticle = true;
+          existing.slug = dbn.name;
+        }
+      }
+    });
+    
+    // Sort dict alphabetically
+    dict.sort((a, b) => a.roman.localeCompare(b.roman));
+    return dict;
+  }, [dbNames]);
+
+  // Logic: First filter by gender, then search/letter
   const filteredData = useMemo(() => {
+    let result = combinedDictionary;
+    
+    if (genderFilter !== 'all') {
+      result = result.filter(item => item.gender === genderFilter || item.gender === 'u');
+    }
+
     if (searchTerm.trim() !== '') {
       const term = searchTerm.toLowerCase();
-      return fullDictionary.filter(item => 
+      return result.filter(item => 
         item.roman.toLowerCase().includes(term) || 
         item.meaning.toLowerCase().includes(term) ||
-        item.hangul.includes(term)
+        item.hangul.toLowerCase().includes(term)
       );
     }
     
-    return fullDictionary.filter(item => item.roman.toLowerCase().startsWith(activeLetter));
-  }, [searchTerm, activeLetter]);
+    return result.filter(item => item.roman.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().startsWith(activeLetter));
+  }, [searchTerm, activeLetter, combinedDictionary, genderFilter]);
+
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() === '') return;
+    
+    if (filteredData.length === 0) {
+      try {
+        await fetch('/api/searches', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: searchTerm, type: 'dictionary_not_found' })
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   // Si busca algo y el activeLetter no hace match y borra todo, navegamos automáticamente a una vista genérica o evitamos error visual.
   // Pero lo dejaremos tal cual para que la URL persista y actúe como filtro primario.
@@ -112,7 +186,24 @@ export default function Dictionary() {
                 </Link>
               ))}
             </div>
-            <div style={{ position: 'relative', width: '320px', maxWidth: '100%' }}>
+            <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}>
+              <div style={{ display: 'flex', background: 'var(--surface-container)', borderRadius: '30px', padding: '0.3rem' }}>
+                <button 
+                  onClick={() => setGenderFilter('all')}
+                  style={{ padding: '0.4rem 1rem', borderRadius: '30px', border: 'none', background: genderFilter === 'all' ? 'var(--primary)' : 'transparent', color: genderFilter === 'all' ? 'white' : 'var(--on-surface-variant)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+                >Todos</button>
+                <button 
+                  onClick={() => setGenderFilter('f')}
+                  style={{ padding: '0.4rem 1rem', borderRadius: '30px', border: 'none', background: genderFilter === 'f' ? '#e91e63' : 'transparent', color: genderFilter === 'f' ? 'white' : 'var(--on-surface-variant)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+                >Femeninos</button>
+                <button 
+                  onClick={() => setGenderFilter('m')}
+                  style={{ padding: '0.4rem 1rem', borderRadius: '30px', border: 'none', background: genderFilter === 'm' ? '#2196f3' : 'transparent', color: genderFilter === 'm' ? 'white' : 'var(--on-surface-variant)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+                >Masculinos</button>
+              </div>
+            </div>
+
+            <form onSubmit={handleSearchSubmit} style={{ position: 'relative', width: '320px', maxWidth: '100%' }}>
               <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--outline-variant)' }} />
               <input 
                 type="text" 
@@ -121,7 +212,7 @@ export default function Dictionary() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.8rem', borderRadius: '30px', border: 'none', background: 'var(--surface-container)', fontSize: '0.9rem', color: 'var(--on-surface)', outline: 'none' }}
               />
-            </div>
+            </form>
           </div>
 
           <div className="dict-grid-container fade-in animate-delay-200">
@@ -140,9 +231,16 @@ export default function Dictionary() {
                     </div>
                   </div>
                   
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem', color: item.style === 'dark-green' ? 'white' : 'var(--on-surface)' }}>
-                    {item.roman}
-                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: item.style === 'dark-green' ? 'white' : 'var(--on-surface)' }}>
+                      {item.roman}
+                    </h3>
+                    {item.isArticle && (
+                      <Link to={`/nombre-coreano/${item.slug}`} className="tooltip" data-tooltip="Leer el artículo completo" style={{ color: 'var(--primary)', display: 'inline-flex', padding: '4px', background: 'var(--secondary-container)', borderRadius: '50%' }}>
+                        <ExternalLink size={14} />
+                      </Link>
+                    )}
+                  </div>
                   
                   <p style={{ fontSize: '0.9rem', color: item.style === 'dark-green' ? 'rgba(255,255,255,0.8)' : 'var(--on-surface-variant)', lineHeight: 1.6 }}>
                     {item.meaning}

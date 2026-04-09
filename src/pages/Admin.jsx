@@ -47,7 +47,8 @@ export default function Admin() {
   const types = [
     { value: 'my-name', label: 'Transliteración' },
     { value: 'saju', label: 'Saju (Nacimiento)' },
-    { value: 'meaning', label: 'Significado' }
+    { value: 'meaning', label: 'Significado' },
+    { value: 'dictionary_not_found', label: 'Búsqueda Fallida (Diccionario)' }
   ];
 
   // 1. Session Management
@@ -351,7 +352,7 @@ export default function Admin() {
                 onChange={(e) => setManualType(e.target.value)}
                 style={{ padding: '0.4rem', borderRadius: '0.4rem', border: '1px solid var(--outline-variant)', fontSize: '0.85rem' }}
               >
-                {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                {types.filter(t => t.value !== 'dictionary_not_found').map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
               <button 
                 type="submit"
@@ -666,7 +667,7 @@ export default function Admin() {
                                 fontSize: '0.8rem'
                               }}
                             >
-                              {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                              {types.filter(t => t.value !== 'dictionary_not_found').map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                             </select>
                             <button 
                               onClick={() => {
@@ -748,7 +749,7 @@ export default function Admin() {
                       onChange={e => setFormData({ ...formData, type: e.target.value })}
                       style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--outline-variant)' }}
                     >
-                      {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                      {types.filter(t => t.value !== 'dictionary_not_found').map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                   </div>
                 </div>

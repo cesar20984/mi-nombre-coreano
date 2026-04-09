@@ -65,6 +65,9 @@ export default async function handler(req, res) {
           // Reject names with 2 or more hyphens (usually transliteration artifacts)
           if ((rawSlug.match(/-/g) || []).length >= 2) continue;
           
+          // Reject names with 1 or 2 letters
+          if (rawSlug.length <= 2) continue;
+          
           // Formulate a unique display key
           const key = mentionType ? `${mentionType}:${rawSlug}` : rawSlug;
 

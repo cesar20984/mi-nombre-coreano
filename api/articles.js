@@ -30,6 +30,16 @@ export default async function handler(req, res) {
       }
     }
 
+    // Public dictionary fetch
+    if (req.query.dictionary === 'true') {
+      try {
+        const result = await sql`SELECT name, title FROM articles WHERE type = 'meaning' ORDER BY title ASC`;
+        return res.status(200).json(result);
+      } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+
     // Batch existence check: /api/articles?check=type1:name1|name2|type2:name3
     // Entries separated by |. With colon = specific category. Without = any category.
     if (req.query.check) {
