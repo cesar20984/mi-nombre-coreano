@@ -489,16 +489,22 @@ export default function Admin() {
                             {new Date(art.updated_at).toLocaleDateString()}
                           </td>
                           <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <a
-                              href={`/${art.type}/${art.name.replace(/\s+/g, '-')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn"
-                              style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
-                              title="Ver en la web"
-                            >
-                              <ExternalLink size={16} />
-                            </a>
+                            {(() => {
+                              const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
+                              const path = TYPE_PATHS[art.type] || art.type;
+                              return (
+                                <a
+                                  href={`/${path}/${art.name.replace(/\s+/g, '-')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn"
+                                  style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                  title="Ver en la web"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              );
+                            })()}
                             <button onClick={() => openEditor(art)} className="btn" style={{ padding: '0.5rem', background: 'transparent' }}>
                               <Edit size={18} color="var(--primary)" />
                             </button>
@@ -571,18 +577,22 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
-                            {exists ? (
-                              <a
-                                href={`/${s.type}/${s.name.replace(/\s+/g, '-')}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn"
-                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
-                                title="Ver en la web"
-                              >
-                                <ExternalLink size={16} />
-                              </a>
-                            ) : (
+                            {exists ? (() => {
+                              const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
+                              const path = TYPE_PATHS[s.type] || s.type;
+                              return (
+                                <a
+                                  href={`/${path}/${s.name.replace(/\s+/g, '-')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn"
+                                  style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                  title="Ver en la web"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              );
+                            })() : (
                               <div style={{ width: '34px' }}></div>
                             )}
                             
@@ -681,18 +691,22 @@ export default function Admin() {
                               <Send size={14} /> Enviar
                             </button>
                             
-                            {link.exists ? (
-                              <a
-                                href={`/${link.existingType}/${link.name.replace(/\s+/g, '-')}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn"
-                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
-                                title="Ver en la web"
-                              >
-                                <ExternalLink size={16} />
-                              </a>
-                            ) : (
+                            {link.exists ? (() => {
+                              const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
+                              const path = TYPE_PATHS[link.existingType] || link.existingType;
+                              return (
+                                <a
+                                  href={`/${path}/${link.name.replace(/\s+/g, '-')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn"
+                                  style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                  title="Ver en la web"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              );
+                            })() : (
                               <div style={{ width: '34px' }}></div>
                             )}
                             
