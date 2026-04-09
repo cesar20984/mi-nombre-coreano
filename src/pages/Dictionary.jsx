@@ -35,6 +35,7 @@ export default function Dictionary() {
   };
 
   const combinedDictionary = useMemo(() => {
+    console.log("Dictionary reconstructing, dbNames length:", dbNames.length, "first few:", dbNames.slice(0, 3));
     const dict = fullDictionary.map(d => ({ ...d, gender: d.gender || getGender(d.roman) }));
     const dictNames = new Set(dict.map(d => d.roman.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase()));
     
@@ -238,8 +239,8 @@ export default function Dictionary() {
                       {item.roman}
                     </h3>
                     {item.isArticle && (
-                      <Link to={`/nombre-coreano/${item.slug}`} className="tooltip" data-tooltip="Leer el artículo completo" style={{ color: 'var(--primary)', display: 'inline-flex', padding: '4px', background: 'var(--secondary-container)', borderRadius: '50%' }}>
-                        <ExternalLink size={14} />
+                      <Link to={`/nombre-coreano/${item.slug}`} style={{ color: 'white', display: 'inline-flex', padding: '6px 14px', background: 'var(--primary)', borderRadius: '30px', fontWeight: 600, fontSize: '0.8rem', gap: '0.3rem', alignItems: 'center', textDecoration: 'none', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)' }}>
+                        Leer Artículo <ExternalLink size={14} />
                       </Link>
                     )}
                   </div>
