@@ -39,16 +39,18 @@ export default function Dictionary() {
     const dictNames = new Set(dict.map(d => d.roman.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase()));
     
     dbNames.forEach(dbn => {
-      const dbRomanPure = dbn.title.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase();
+      const dbTitle = dbn.title || dbn.name;
+      const titleToUse = dbTitle ? dbTitle.charAt(0).toUpperCase() + dbTitle.slice(1) : "";
+      const dbRomanPure = titleToUse.normalize("NFD").replace(/[\u0300-\u036f\- ]/g, "").toLowerCase();
       if (!dictNames.has(dbRomanPure)) {
         dict.push({
-          hangul: dbn.title,
-          roman: dbn.title,
+          hangul: titleToUse,
+          roman: titleToUse,
           meaning: 'Significado detallado disponible en el artículo completo.',
           style: 'light',
           isArticle: true,
           slug: dbn.name,
-          gender: getGender(dbn.title)
+          gender: getGender(titleToUse)
         });
         dictNames.add(dbRomanPure);
       } else {
