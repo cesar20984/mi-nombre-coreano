@@ -25,7 +25,7 @@ export const staticRoutes = [
 ];
 
 export const dynamicRoutes = [
-  { path: '/my-name/:name' },
+  { path: '/nombre-en-coreano/:name' },
   { path: '/saju/:name' },
-  { path: '/meaning/:name' },
+  { path: '/significado-nombre-coreano/:name' },
 ];

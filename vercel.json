@@ -1,6 +1,8 @@
 {
   "redirects": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap", "statusCode": 301 }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap", "statusCode": 301 },
+    { "source": "/my-name/:name", "destination": "/nombre-en-coreano/:name", "statusCode": 301 },
+    { "source": "/meaning/:name", "destination": "/significado-nombre-coreano/:name", "statusCode": 301 }
   ],
   "rewrites": [
     { "source": "/robots.txt", "destination": "/robots.txt" },

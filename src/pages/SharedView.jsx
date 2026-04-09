@@ -90,7 +90,13 @@ export function normalizeSlug(str) {
 export function buildShareUrl(type, data) {
   // type: 'my-name' | 'saju' | 'meaning'
   const slug = normalizeSlug(data.name);
-  const base = `${window.location.origin}/${type}/${slug}`;
+  const TYPE_PATHS = {
+    'my-name': 'nombre-en-coreano',
+    'saju': 'saju',
+    'meaning': 'significado-nombre-coreano'
+  };
+  const path = TYPE_PATHS[type] || type;
+  const base = `${window.location.origin}/${path}/${slug}`;
   const params = new URLSearchParams();
   if (data.day) params.set('d', data.day);
   if (data.month) params.set('m', data.month);
@@ -102,9 +108,11 @@ export function buildShareUrl(type, data) {
 
 // ─── Detect route type from pathname ───
 function getTypeFromPath(pathname) {
-  if (pathname.startsWith('/my-name')) return 'my-name';
+  if (pathname.startsWith('/nombre-en-coreano')) return 'my-name';
+  if (pathname.startsWith('/my-name')) return 'my-name'; // Support legacy if needed (though 301 handles it)
   if (pathname.startsWith('/saju')) return 'saju';
-  if (pathname.startsWith('/meaning')) return 'meaning';
+  if (pathname.startsWith('/significado-nombre-coreano')) return 'meaning';
+  if (pathname.startsWith('/meaning')) return 'meaning'; // Support legacy
   return null;
 }
 
@@ -220,9 +228,15 @@ export default function SharedView() {
                   const foundType = existsMap[key];
 
                   if (foundType) {
-                    const linkType = tagType || foundType;
+                    const internalLinkType = tagType || foundType;
+                    const TYPE_PATHS = {
+                      'my-name': 'nombre-en-coreano',
+                      'saju': 'saju',
+                      'meaning': 'significado-nombre-coreano'
+                    };
+                    const linkPath = TYPE_PATHS[internalLinkType] || internalLinkType;
                     const slug = encodeURIComponent(normalizeSlug(tagName));
-                    return `<a href="/${linkType}/${slug}" class="article-interlink">${displayName}</a>`;
+                    return `<a href="/${linkPath}/${slug}" class="article-interlink">${displayName}</a>`;
                   }
                   return displayName;
                 });

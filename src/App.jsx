@@ -108,9 +108,9 @@ function App() {
             <Route path="/diccionario/:letter" element={<Dictionary />} />
             <Route path="/mascotas" element={<Pets />} />
             <Route path="/tatuajes" element={<Tattoos />} />
-            <Route path="/my-name/:name" element={<SharedView />} />
+            <Route path="/nombre-en-coreano/:name" element={<SharedView />} />
             <Route path="/saju/:name" element={<SharedView />} />
-            <Route path="/meaning/:name" element={<SharedView />} />
+            <Route path="/significado-nombre-coreano/:name" element={<SharedView />} />
             <Route path="/koriname-admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
