@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Trash2, Edit, Plus, LogOut, FileText, Search, Send, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
+import { Trash2, Edit, Plus, LogOut, FileText, Search, Send, CheckCircle, XCircle, ExternalLink, Eye, EyeOff } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const SESSION_KEY = 'koriname_admin_session';
@@ -31,6 +31,24 @@ export default function Admin() {
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkNames, setBulkNames] = useState('');
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 });
+  
+  // Hiding state
+  const [hiddenKeys, setHiddenKeys] = useState(() => {
+    const saved = localStorage.getItem('koriname_hidden_keys');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [searchTab, setSearchTab] = useState('active'); // 'active' | 'hidden'
+  const [mentionTab, setMentionTab] = useState('active'); // 'active' | 'hidden'
+
+  useEffect(() => {
+    localStorage.setItem('koriname_hidden_keys', JSON.stringify(hiddenKeys));
+  }, [hiddenKeys]);
+
+  const toggleHide = (key) => {
+    setHiddenKeys(prev => 
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
 
   // Quill Modules (matching standard toolbar)
   const modules = {
@@ -523,9 +541,27 @@ export default function Admin() {
           {view === 'searches' && (
             <div className="card" style={{ padding: '2rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 className="body-lg" style={{ fontWeight: 600 }}>Registro de Búsquedas</h2>
+                <div>
+                  <h2 className="body-lg" style={{ fontWeight: 600 }}>Registro de Búsquedas</h2>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <button 
+                      onClick={() => setSearchTab('active')}
+                      className="btn"
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem', background: searchTab === 'active' ? 'var(--primary)' : 'var(--surface-container)', color: searchTab === 'active' ? 'white' : 'var(--on-surface-variant)' }}
+                    >
+                      Activas ({searches.filter(s => !hiddenKeys.includes(`search:${s.name}:${s.type}`)).length})
+                    </button>
+                    <button 
+                      onClick={() => setSearchTab('hidden')}
+                      className="btn"
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem', background: searchTab === 'hidden' ? 'var(--primary)' : 'var(--surface-container)', color: searchTab === 'hidden' ? 'white' : 'var(--on-surface-variant)' }}
+                    >
+                      Ocultas ({searches.filter(s => hiddenKeys.includes(`search:${s.name}:${s.type}`)).length})
+                    </button>
+                  </div>
+                </div>
                 <button onClick={fetchSearches} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container-low)' }}>
-                  Actualizar Restableciendo Filtros
+                  Actualizar Lista
                 </button>
               </div>
 
@@ -545,74 +581,89 @@ export default function Admin() {
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría</th>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)', textAlign: 'center' }}>Consultas</th>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Última vez</th>
-                        <th style={{ padding: '1rem', textAlign: 'right' }}>Webhook / Estado</th>
+                        <th style={{ padding: '1rem', textAlign: 'right' }}>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {searches.map(s => {
-                        const exists = articles.some(a => a.name.toLowerCase() === s.name.replace(/-/g, ' ').toLowerCase() && a.type === s.type);
-                        return (
-                        <tr key={s.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
-                          <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
-                            {s.name}
-                          </td>
-                          <td style={{ padding: '1rem' }}>
-                            <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
-                              {types.find(t => t.value === s.type)?.label || s.type}
-                            </span>
-                          </td>
-                          <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
-                            {s.count}
-                          </td>
-                          <td style={{ padding: '1rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>
-                            {new Date(s.updated_at).toLocaleString()}
-                          </td>
-                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <button 
-                              onClick={() => handleSendWebhook(s)} 
-                              className="btn btn-primary" 
-                              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
-                              title="Enviar al Webhook (N8N)"
-                            >
-                              <Send size={14} /> Enviar
-                            </button>
-                            
-                            {exists ? (() => {
-                              const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
-                              const path = TYPE_PATHS[s.type] || s.type;
-                              return (
-                                <a
-                                  href={`/${path}/${s.name.replace(/\s+/g, '-')}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="btn"
-                                  style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
-                                  title="Ver en la web"
-                                >
-                                  <ExternalLink size={16} />
-                                </a>
-                              );
-                            })() : (
-                              <div style={{ width: '34px' }}></div>
-                            )}
-                            
-                            <div 
-                              style={{ 
-                                padding: '0.4rem 0.8rem',
-                                borderRadius: '0.5rem',
-                                background: exists ? '#4CAF50' : 'var(--surface-container-highest)', 
-                                color: exists ? '#FFFFFF' : '#9E9E9E',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              title={exists ? "Artículo ya existe" : "Artículo no existe"}
-                            >
-                              {exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
-                            </div>
-                          </td>
-                        </tr>
-                      )})}
+                      {searches
+                        .filter(s => {
+                          const isHidden = hiddenKeys.includes(`search:${s.name}:${s.type}`);
+                          return searchTab === 'hidden' ? isHidden : !isHidden;
+                        })
+                        .map(s => {
+                          const itemKey = `search:${s.name}:${s.type}`;
+                          const exists = articles.some(a => a.name.toLowerCase() === s.name.replace(/-/g, ' ').toLowerCase() && a.type === s.type);
+                          return (
+                          <tr key={s.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                            <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
+                              {s.name}
+                            </td>
+                            <td style={{ padding: '1rem' }}>
+                              <span className="badge" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}>
+                                {types.find(t => t.value === s.type)?.label || s.type}
+                              </span>
+                            </td>
+                            <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                              {s.count}
+                            </td>
+                            <td style={{ padding: '1rem', color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>
+                              {new Date(s.updated_at).toLocaleString()}
+                            </td>
+                            <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                              <button 
+                                onClick={() => toggleHide(itemKey)} 
+                                className="btn" 
+                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                title={searchTab === 'hidden' ? "Mostrar" : "Ocultar"}
+                              >
+                                {searchTab === 'hidden' ? <Eye size={18} /> : <EyeOff size={18} />}
+                              </button>
+
+                              <button 
+                                onClick={() => handleSendWebhook(s)} 
+                                className="btn btn-primary" 
+                                style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
+                                title="Enviar al Webhook (N8N)"
+                              >
+                                <Send size={14} /> Enviar
+                              </button>
+                              
+                              {exists ? (() => {
+                                const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
+                                const path = TYPE_PATHS[s.type] || s.type;
+                                return (
+                                  <a
+                                    href={`/${path}/${s.name.replace(/\s+/g, '-')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn"
+                                    style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                    title="Ver en la web"
+                                  >
+                                    <ExternalLink size={16} />
+                                  </a>
+                                );
+                              })() : (
+                                <div style={{ width: '34px' }}></div>
+                              )}
+                              
+                              <div 
+                                style={{ 
+                                  padding: '0.4rem 0.8rem',
+                                  borderRadius: '0.5rem',
+                                  background: exists ? '#4CAF50' : 'var(--surface-container-highest)', 
+                                  color: exists ? '#FFFFFF' : '#9E9E9E',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                title={exists ? "Artículo ya existe" : "Artículo no existe"}
+                              >
+                                {exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
+                              </div>
+                            </td>
+                          </tr>
+                        )})}
                     </tbody>
                   </table>
                 </div>
@@ -623,7 +674,25 @@ export default function Admin() {
           {view === 'interlinks' && (
             <div className="card" style={{ padding: '2rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 className="body-lg" style={{ fontWeight: 600 }}>Menciones en Artículos</h2>
+                <div>
+                  <h2 className="body-lg" style={{ fontWeight: 600 }}>Menciones en Artículos</h2>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <button 
+                      onClick={() => setMentionTab('active')}
+                      className="btn"
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem', background: mentionTab === 'active' ? 'var(--primary)' : 'var(--surface-container)', color: mentionTab === 'active' ? 'white' : 'var(--on-surface-variant)' }}
+                    >
+                      Activas ({interlinks.filter(l => !hiddenKeys.includes(`mention:${l.name}`)).length})
+                    </button>
+                    <button 
+                      onClick={() => setMentionTab('hidden')}
+                      className="btn"
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem', background: mentionTab === 'hidden' ? 'var(--primary)' : 'var(--surface-container)', color: mentionTab === 'hidden' ? 'white' : 'var(--on-surface-variant)' }}
+                    >
+                      Ocultas ({interlinks.filter(l => hiddenKeys.includes(`mention:${l.name}`)).length})
+                    </button>
+                  </div>
+                </div>
                 <button onClick={fetchInterlinks} className="btn" style={{ padding: '0.5rem 1rem', background: 'var(--surface-container-low)' }}>
                   Actualizar Lista
                 </button>
@@ -644,89 +713,105 @@ export default function Admin() {
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Nombre Interlink</th>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)' }}>Categoría Registrada</th>
                         <th style={{ padding: '1rem', color: 'var(--on-surface-variant)', textAlign: 'center' }}>Total Menciones</th>
-                        <th style={{ padding: '1rem', textAlign: 'right' }}>Estado</th>
+                        <th style={{ padding: '1rem', textAlign: 'right' }}>Estado / Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {interlinks.map((link, i) => (
-                        <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
-                          <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
-                            {link.name}
-                          </td>
-                          <td style={{ padding: '1rem' }}>
-                            {link.existingType ? (
-                              <span className="badge" style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', background: 'var(--surface-container-high)', border: '1px solid var(--outline-variant)' }}>
-                                {types.find(t => t.value === link.existingType)?.label || link.existingType}
-                              </span>
-                            ) : (
-                              <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>—</span>
-                            )}
-                          </td>
-                          <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
-                            {link.count}
-                          </td>
-                          <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <select
-                              id={`mention-type-${i}`}
-                              defaultValue={link.type || 'meaning'}
-                              style={{ 
-                                padding: '0.3rem', 
-                                borderRadius: '0.5rem', 
-                                background: 'var(--surface)', 
-                                border: '1px solid var(--outline-variant)',
-                                fontSize: '0.8rem'
-                              }}
-                            >
-                              {types.filter(t => t.value !== 'dictionary_not_found').map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                            </select>
-                            <button 
-                              onClick={() => {
-                                const type = document.getElementById(`mention-type-${i}`).value;
-                                handleSendWebhook({ name: link.name, type });
-                              }} 
-                              className="btn btn-primary" 
-                              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
-                              title="Enviar al Webhook (N8N)"
-                            >
-                              <Send size={14} /> Enviar
-                            </button>
-                            
-                            {link.exists ? (() => {
-                              const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
-                              const path = TYPE_PATHS[link.existingType] || link.existingType;
-                              return (
-                                <a
-                                  href={`/${path}/${link.name.replace(/\s+/g, '-')}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="btn"
-                                  style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
-                                  title="Ver en la web"
-                                >
-                                  <ExternalLink size={16} />
-                                </a>
-                              );
-                            })() : (
-                              <div style={{ width: '34px' }}></div>
-                            )}
-                            
-                            <div 
-                              style={{ 
-                                padding: '0.4rem 0.8rem',
-                                borderRadius: '0.5rem',
-                                background: link.exists ? '#4CAF50' : 'var(--surface-container-highest)', 
-                                color: link.exists ? '#FFFFFF' : '#9E9E9E',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              title={link.exists ? "Artículo ya existe" : "Artículo no existe"}
-                            >
-                              {link.exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                      {interlinks
+                        .filter(l => {
+                          const isHidden = hiddenKeys.includes(`mention:${l.name}`);
+                          return mentionTab === 'hidden' ? isHidden : !isHidden;
+                        })
+                        .map((link, i) => {
+                          const itemKey = `mention:${link.name}`;
+                          return (
+                          <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                            <td style={{ padding: '1rem', fontWeight: 500, textTransform: 'capitalize' }}>
+                              {link.name}
+                            </td>
+                            <td style={{ padding: '1rem' }}>
+                              {link.existingType ? (
+                                <span className="badge" style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', background: 'var(--surface-container-high)', border: '1px solid var(--outline-variant)' }}>
+                                  {types.find(t => t.value === link.existingType)?.label || link.existingType}
+                                </span>
+                              ) : (
+                                <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>—</span>
+                              )}
+                            </td>
+                            <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                              {link.count}
+                            </td>
+                            <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                              <button 
+                                onClick={() => toggleHide(itemKey)} 
+                                className="btn" 
+                                style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                title={mentionTab === 'hidden' ? "Mostrar" : "Ocultar"}
+                              >
+                                {mentionTab === 'hidden' ? <Eye size={18} /> : <EyeOff size={18} />}
+                              </button>
+
+                              <select
+                                id={`mention-type-${i}`}
+                                defaultValue={link.type || 'meaning'}
+                                style={{ 
+                                  padding: '0.3rem', 
+                                  borderRadius: '0.5rem', 
+                                  background: 'var(--surface)', 
+                                  border: '1px solid var(--outline-variant)',
+                                  fontSize: '0.8rem'
+                                }}
+                              >
+                                {types.filter(t => t.value !== 'dictionary_not_found').map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                              </select>
+                              <button 
+                                onClick={() => {
+                                  const type = document.getElementById(`mention-type-${i}`).value;
+                                  handleSendWebhook({ name: link.name, type });
+                                }} 
+                                className="btn btn-primary" 
+                                style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.3rem' }}
+                                title="Enviar al Webhook (N8N)"
+                              >
+                                <Send size={14} /> Enviar
+                              </button>
+                              
+                              {link.exists ? (() => {
+                                const TYPE_PATHS = { 'my-name': 'nombre-en-coreano', 'saju': 'saju', 'meaning': 'significado-nombre-coreano' };
+                                const path = TYPE_PATHS[link.existingType] || link.existingType;
+                                return (
+                                  <a
+                                    href={`/${path}/${link.name.replace(/\s+/g, '-')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn"
+                                    style={{ padding: '0.4rem', color: 'var(--on-surface-variant)' }}
+                                    title="Ver en la web"
+                                  >
+                                    <ExternalLink size={16} />
+                                  </a>
+                                );
+                              })() : (
+                                <div style={{ width: '34px' }}></div>
+                              )}
+                              
+                              <div 
+                                style={{ 
+                                  padding: '0.4rem 0.8rem',
+                                  borderRadius: '0.5rem',
+                                  background: link.exists ? '#4CAF50' : 'var(--surface-container-highest)', 
+                                  color: link.exists ? '#FFFFFF' : '#9E9E9E',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                title={link.exists ? "Artículo ya existe" : "Artículo no existe"}
+                              >
+                                {link.exists ? <CheckCircle size={24} strokeWidth={2.5} /> : <XCircle size={24} />}
+                              </div>
+                            </td>
+                          </tr>
+                        )})}
                     </tbody>
                   </table>
                 </div>
