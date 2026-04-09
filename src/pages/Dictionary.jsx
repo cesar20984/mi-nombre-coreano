@@ -77,11 +77,11 @@ export default function Dictionary() {
     }
 
     if (searchTerm.trim() !== '') {
-      const term = searchTerm.toLowerCase();
+      const term = searchTerm.toLowerCase().replace(/[\- ]/g, "");
       return result.filter(item => 
-        item.roman.toLowerCase().includes(term) || 
-        item.meaning.toLowerCase().includes(term) ||
-        item.hangul.toLowerCase().includes(term)
+        item.roman.toLowerCase().replace(/[\- ]/g, "").includes(term) || 
+        item.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.hangul.toLowerCase().replace(/[\- ]/g, "").includes(term)
       );
     }
     
