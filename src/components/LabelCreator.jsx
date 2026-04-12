@@ -110,19 +110,12 @@ export default function LabelCreator({ result, isSharedView }) {
 
   return (
     <div className="fade-in animate-delay-200">
-      <div className="text-center mb-6">
         <h2 className="title-lg mb-1" style={{ color: 'var(--secondary)' }}>
           {isSharedView ? 'Escucha su pronunciación:' : 'Este sería tu nombre en coreano'}
         </h2>
-        {isSharedView ? (
-          <a href="/" className="btn btn-primary" style={{ marginTop: '0.75rem', borderRadius: '2rem', fontSize: '0.9rem', padding: '0.6rem 1.5rem' }}>
-            <Sparkles size={16} /> Descubre otro nombre en coreano
-          </a>
-        ) : (
-          <p className="body-sm" style={{ opacity: 0.6, fontSize: '0.85rem' }}>
-            Copia o comparte tu nombre con esta etiqueta personalizada
-          </p>
-        )}
+        <p className="body-sm" style={{ opacity: 0.6, fontSize: '0.85rem' }}>
+          {isSharedView ? 'Puedes cambiar el diseño antes de compartir' : 'Copia o comparte tu nombre con esta etiqueta personalizada'}
+        </p>
       </div>
       
       <div className="label-canvas-container" style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
@@ -324,6 +317,14 @@ export default function LabelCreator({ result, isSharedView }) {
               {t.name}
             </button>
           ))}
+        </div>
+      )}
+
+      {isSharedView && (
+        <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '2rem' }}>
+          <a href="/" className="btn btn-primary" style={{ display: 'inline-flex', borderRadius: '2rem', fontSize: '1rem', padding: '0.8rem 2rem', gap: '0.5rem' }}>
+            <Sparkles size={20} /> ¡Descubre tu propio nombre en coreano!
+          </a>
         </div>
       )}
 
