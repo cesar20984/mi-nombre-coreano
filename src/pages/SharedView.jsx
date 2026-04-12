@@ -1,6 +1,6 @@
 import { useParams, useSearchParams, Link, useLocation } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Volume2, VolumeX } from 'lucide-react';
 import LabelCreator from '../components/LabelCreator';
 import SEO from '../components/SEO';
 import { transliterate } from '../utils/koreanGenerators';
@@ -173,6 +173,35 @@ export default function SharedView() {
 
   const [articleContent, setArticleContent] = useState(null);
   const [dbTitle, setDbTitle] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const handleListenContent = () => {
+    if (!articleContent) return;
+    
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    // Strip HTML to get clean text
+    const temp = document.createElement('div');
+    temp.innerHTML = articleContent;
+    const textToRead = temp.innerText || temp.textContent;
+    
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    
+    // Detect language or default to Spanish
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.95;
+    
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
+    window.speechSynthesis.speak(utterance);
+  };
 
   useEffect(() => {
     async function fetchArticle() {
@@ -328,15 +357,39 @@ export default function SharedView() {
           {/* Intro */}
           <div className="fade-in text-center mb-6">
             <span className="badge">{TYPE_LABELS[type] || 'Nombre Coreano'}</span>
-            {h1ByType[type] || (
-              <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
-                <span style={{ color: 'var(--secondary)' }}>{displayName}</span> en Coreano
-              </h1>
-            )}
-            <p className="body-lg" style={{ color: 'var(--on-surface-variant)' }}>
-              Así suena y se escribe en el alfabeto Hangul
-            </p>
-          </div>
+              {h1ByType[type] || (
+                <h1 className="display-md mb-2" style={{ marginTop: '1rem' }}>
+                  <span style={{ color: 'var(--secondary)' }}>{displayName}</span> en Coreano
+                </h1>
+              )}
+              {articleContent && (
+                <button 
+                  onClick={handleListenContent}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.4rem 1rem',
+                    borderRadius: '2rem',
+                    fontSize: '0.9rem',
+                    background: isSpeaking ? 'var(--secondary-container)' : 'var(--surface-container-high)',
+                    color: isSpeaking ? 'var(--on-secondary-container)' : 'var(--primary)',
+                    border: '1px solid var(--outline-variant)',
+                    cursor: 'pointer',
+                    marginTop: '0.5rem',
+                    fontWeight: 600,
+                    transition: 'all 0.2s ease'
+                  }}
+                  className="hover-lift"
+                >
+                  {isSpeaking ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                  {isSpeaking ? 'Detener lectura' : 'Escuchar este contenido'}
+                </button>
+              )}
+              <p className="body-lg" style={{ color: 'var(--on-surface-variant)', marginTop: '0.75rem' }}>
+                Así suena y se escribe en el alfabeto Hangul
+              </p>
+            </div>
 
           {/* Full LabelCreator — same as Home, with shared view mode */}
           <LabelCreator result={result} isSharedView />
