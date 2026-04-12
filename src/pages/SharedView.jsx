@@ -187,20 +187,44 @@ export default function SharedView() {
     // Strip HTML to get clean text
     const temp = document.createElement('div');
     temp.innerHTML = articleContent;
-    const textToRead = temp.innerText || temp.textContent;
+    const fullText = temp.innerText || temp.textContent;
+    
+    // Regex for Korean characters
+    const koreanRegex = /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]+/;
+    
+    // Split text into chunks, keeping the korean parts as separate items
+    const chunks = fullText.split(/([\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]+)/g).filter(t => t && t.trim().length > 0);
     
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(textToRead);
     
-    // Detect language or default to Spanish
-    utterance.lang = 'es-ES';
-    utterance.rate = 0.95;
-    
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-    
-    window.speechSynthesis.speak(utterance);
+    let totalChunks = chunks.length;
+    let finishedChunks = 0;
+
+    if (totalChunks === 0) return;
+
+    chunks.forEach((text) => {
+      const isKorean = koreanRegex.test(text);
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      utterance.lang = isKorean ? 'ko-KR' : 'es-ES';
+      utterance.rate = isKorean ? 0.85 : 0.95; // Korean sounds better a bit slower
+      
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => {
+        finishedChunks++;
+        if (finishedChunks >= totalChunks) {
+          setIsSpeaking(false);
+        }
+      };
+      utterance.onerror = () => {
+        finishedChunks++;
+        if (finishedChunks >= totalChunks) {
+          setIsSpeaking(false);
+        }
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    });
   };
 
   useEffect(() => {
