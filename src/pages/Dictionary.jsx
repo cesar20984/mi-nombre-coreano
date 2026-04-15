@@ -239,7 +239,7 @@ export default function Dictionary() {
                       {item.roman}
                     </h3>
                     {item.isArticle && (
-                      <Link to={`/significado-nombre-coreano/${item.slug}`} style={{ color: 'white', display: 'inline-flex', padding: '6px 14px', background: 'var(--primary)', borderRadius: '30px', fontWeight: 600, fontSize: '0.8rem', gap: '0.3rem', alignItems: 'center', textDecoration: 'none', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)' }}>
+                      <Link to={`/significado-nombre-coreano/${item.slug.replace(/\s+/g, '-')}`} style={{ color: 'white', display: 'inline-flex', padding: '6px 14px', background: 'var(--primary)', borderRadius: '30px', fontWeight: 600, fontSize: '0.8rem', gap: '0.3rem', alignItems: 'center', textDecoration: 'none', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)' }}>
                         Leer Artículo <ExternalLink size={14} />
                       </Link>
                     )}
