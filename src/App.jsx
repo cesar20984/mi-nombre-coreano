@@ -14,6 +14,7 @@ import Legal from './pages/Legal';
 import Cookies from './pages/Cookies';
 import Privacy from './pages/Privacy';
 import About from './pages/About';
+import QueEsKoriname from './pages/QueEsKoriname';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -91,6 +92,7 @@ function Footer() {
           Elaborado con amor para acercar la cultura y estética coreana al mundo hispanohablante.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <Link to="/que-es-koriname" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>¿Qué es Koriname?</Link>
           <Link to="/quienes-somos" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Quiénes Somos</Link>
           <Link to="/aviso-legal" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Aviso Legal</Link>
           <Link to="/privacidad" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Privacidad</Link>
@@ -126,6 +128,7 @@ function App() {
             <Route path="/privacidad" element={<Privacy />} />
             <Route path="/cookies" element={<Cookies />} />
             <Route path="/quienes-somos" element={<About />} />
+            <Route path="/que-es-koriname" element={<QueEsKoriname />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
