@@ -13,6 +13,7 @@ import Admin from './pages/Admin';
 import Legal from './pages/Legal';
 import Cookies from './pages/Cookies';
 import Privacy from './pages/Privacy';
+import About from './pages/About';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -89,13 +90,14 @@ function Footer() {
         <p className="body-sm" style={{ opacity: 0.7 }}>
           Elaborado con amor para acercar la cultura y estética coreana al mundo hispanohablante.
         </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <Link to="/quienes-somos" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Quiénes Somos</Link>
           <Link to="/aviso-legal" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Aviso Legal</Link>
           <Link to="/privacidad" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Privacidad</Link>
           <Link to="/cookies" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Cookies</Link>
         </div>
         <p className="body-sm mt-4" style={{ opacity: 0.5 }}>
-          © {new Date().getFullYear()} Koriname.com. Sólo para uso de entretenimiento y estético.
+          © {new Date().getFullYear()} Koriname.com. Todos los derechos reservados.
         </p>
       </div>
     </footer>
@@ -123,6 +125,7 @@ function App() {
             <Route path="/aviso-legal" element={<Legal />} />
             <Route path="/privacidad" element={<Privacy />} />
             <Route path="/cookies" element={<Cookies />} />
+            <Route path="/quienes-somos" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
