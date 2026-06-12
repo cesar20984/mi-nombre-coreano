@@ -98,9 +98,9 @@ function Footer() {
           <Link to="/privacidad" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Privacidad</Link>
           <Link to="/cookies" style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', textDecoration: 'none' }}>Cookies</Link>
         </div>
-        <p className="body-sm mt-4" style={{ opacity: 0.5 }}>
+        <p className="body-sm mt-4" style={{ opacity: 0.8 }}>
           © {new Date().getFullYear()} Koriname.com. Todos los derechos reservados.<br />
-          <span style={{ display: 'inline-block', marginTop: '0.5rem' }}>Página web creada por <a href="https://sitiova.cl" target="_blank" rel="noopener noreferrer" style={{ color: '#20dff2', fontWeight: 800, textDecoration: 'none' }}>Sitiova</a></span>
+          <span style={{ display: 'inline-block', marginTop: '0.8rem', fontWeight: 600 }}>Página web creada por <a href="https://sitiova.cl" target="_blank" rel="noopener noreferrer" style={{ color: '#0a0a0a', backgroundColor: '#20dff2', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 900, textDecoration: 'none', marginLeft: '0.3rem' }}>Sitiova</a></span>
         </p>
       </div>
     </footer>
